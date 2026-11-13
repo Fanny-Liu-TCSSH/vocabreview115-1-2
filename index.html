@@ -231,6 +231,7 @@
               你的輸入：<span id="user-wrong-input" class="line-through mr-2"></span> 
               正確：<span id="wrong-correct-ans" class="text-base font-black underline text-rose-950"></span>
             </p>
+            <p id="inflection-warning-text" class="hidden mt-1 text-xs sm:text-sm font-black text-amber-950 bg-amber-200 px-2.5 py-1 rounded-lg border border-amber-700"></p>
           </div>
         </div>
         <div class="pt-2 border-t-2 border-rose-300/80 text-sm sm:text-base font-bold text-rose-950 flex items-start gap-2">
@@ -911,9 +912,11 @@
       feedbackCorrect.classList.add('hidden');
       feedbackWrong.classList.add('hidden');
 
-      const isCorrect =
-        userVal.toLowerCase() === item.ans.toLowerCase() ||
-        userVal.toLowerCase() === item.word.toLowerCase();
+      const inflectionWarnEl = document.getElementById('inflection-warning-text');
+      if (inflectionWarnEl) inflectionWarnEl.classList.add('hidden');
+
+      // 嚴格比對句中實際詞形 item.ans（複數 -s、過去式 -ed、三單等必須完全符合才算對）
+      const isCorrect = userVal.toLowerCase() === item.ans.toLowerCase();
 
       totalAnswered += 1;
 
@@ -932,6 +935,19 @@
         document.getElementById('user-wrong-input').textContent = userVal;
         document.getElementById('wrong-correct-ans').textContent = item.ans;
         document.getElementById('wrong-translation-text').textContent = item.trans;
+
+        // 若學生輸入了原形單字但忘了加字尾變化，顯示專屬提醒
+        if (
+          inflectionWarnEl &&
+          item.ans.toLowerCase() !== item.word.toLowerCase() &&
+          userVal.toLowerCase() === item.word.toLowerCase()
+        ) {
+          const blankMatch = item.q.match(/[A-Za-z-]+_[A-Za-z_]*/);
+          const blankHint = blankMatch ? blankMatch[0] : item.ans;
+          inflectionWarnEl.textContent = `⚠️ 注意字尾變化！題目提示為「${blankHint}」，需填入詞形變化：${item.ans}`;
+          inflectionWarnEl.classList.remove('hidden');
+        }
+
         feedbackWrong.classList.remove('hidden');
 
         if (!roundMistakes.some(m => m.id === item.id)) {

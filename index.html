@@ -115,21 +115,22 @@
       </div>
 
       <!-- 進度條與答對率統計 -->
-      <div class="bg-white rounded-2xl border-2 border-dopamine-dark p-3 shadow-pop-sm flex items-center justify-between gap-3">
-        <div class="flex-1">
-          <div class="flex justify-between text-xs sm:text-sm font-extrabold mb-1">
-            <span>本輪進度：<span id="progress-current" class="text-dopamine-blue">1</span> / <span id="progress-total">161</span> 題</span>
-            <span class="text-emerald-600">連續答對 🔥 <span id="streak-count">0</span></span>
-          </div>
-          <div class="w-full h-3 bg-slate-100 rounded-full border border-dopamine-dark overflow-hidden">
-            <div id="progress-bar" class="h-full bg-dopamine-mint rounded-full transition-all duration-300" style="width: 1%;"></div>
-          </div>
+      <div class="bg-white rounded-2xl border-2 border-dopamine-dark p-3 shadow-pop-sm flex flex-col gap-2">
+        <div class="flex justify-between items-center text-xs sm:text-sm font-extrabold">
+          <span>本輪進度：<span id="progress-current" class="text-dopamine-blue">1</span> / <span id="progress-total">20</span> 題</span>
+          <span class="bg-amber-100 text-amber-900 px-2.5 py-0.5 rounded-lg border border-dopamine-dark text-xs font-black">
+            題庫探索：<span id="pool-coverage-text">0 / 161</span> 題
+          </span>
+          <span class="text-emerald-600">連續答對 🔥 <span id="streak-count">0</span></span>
+        </div>
+        <div class="w-full h-3 bg-slate-100 rounded-full border border-dopamine-dark overflow-hidden">
+          <div id="progress-bar" class="h-full bg-dopamine-mint rounded-full transition-all duration-300" style="width: 5%;"></div>
         </div>
       </div>
     </section>
 
     <!-- 2. 核心答題卡片 (大字體、高對比、手機打字友善) -->
-    <section aria-label="單字測驗卡片" class="bg-white rounded-3xl border-4 border-dopamine-dark shadow-pop-lg p-5 sm:p-7 flex flex-col gap-5 relative">
+    <section id="quiz-card-section" aria-label="單字測驗卡片" class="bg-white rounded-3xl border-4 border-dopamine-dark shadow-pop-lg p-5 sm:p-7 flex flex-col gap-5 relative">
       
       <!-- 卡片頂部：出處標籤 & 兩段式獨立救命提示按鈕 -->
       <div class="flex flex-wrap items-center justify-between gap-2">
@@ -250,6 +251,65 @@
       </div>
 
     </section>
+
+    <!-- ==================== 2B. 20 題完賽結算小卡片 (預設 hidden) ==================== -->
+    <section id="round-summary-card" aria-label="本輪完賽結算卡片" class="hidden bg-white rounded-3xl border-4 border-dopamine-dark shadow-pop-lg p-6 sm:p-7 flex flex-col gap-5">
+      <div class="flex items-center justify-between border-b-2 border-dashed border-slate-300 pb-4">
+        <div>
+          <span id="summary-cycle-badge" class="inline-block bg-dopamine-yellow text-dopamine-dark text-xs font-black px-3 py-1 rounded-xl border-2 border-dopamine-dark mb-1">
+            🎉 本輪挑戰完成！
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-black text-dopamine-dark">20 題完賽成績單</h2>
+        </div>
+        <div class="bg-dopamine-mint border-3 border-dopamine-dark rounded-2xl px-4 py-2.5 text-center shadow-pop-sm">
+          <p class="text-xs font-black text-dopamine-dark">本輪得分</p>
+          <p class="text-3xl sm:text-4xl font-black text-dopamine-dark"><span id="summary-score">100</span><span class="text-base ml-0.5">分</span></p>
+        </div>
+      </div>
+
+      <!-- 本輪三大統計數據 -->
+      <div class="grid grid-cols-3 gap-2.5 text-center">
+        <div class="bg-amber-50 rounded-2xl p-3 border-2 border-dopamine-dark">
+          <p class="text-xs font-bold text-slate-500">本輪答對</p>
+          <p id="summary-correct-ratio" class="text-lg sm:text-xl font-black text-emerald-600 mt-0.5">20 / 20 題</p>
+        </div>
+        <div class="bg-amber-50 rounded-2xl p-3 border-2 border-dopamine-dark">
+          <p class="text-xs font-bold text-slate-500">最高連勝</p>
+          <p id="summary-max-streak" class="text-lg sm:text-xl font-black text-rose-500 mt-0.5">🔥 20</p>
+        </div>
+        <div class="bg-amber-50 rounded-2xl p-3 border-2 border-dopamine-dark">
+          <p class="text-xs font-bold text-slate-500">題庫探索進度</p>
+          <p id="summary-pool-progress" class="text-lg sm:text-xl font-black text-dopamine-blue mt-0.5">20 / 161</p>
+        </div>
+      </div>
+
+      <!-- 本輪錯題快覽 -->
+      <div class="bg-slate-50 rounded-2xl border-2 border-dopamine-dark p-4 flex flex-col gap-2.5">
+        <div class="flex items-center justify-between">
+          <h3 class="text-sm font-black text-dopamine-dark flex items-center gap-1.5">
+            <i class="fa-solid fa-clipboard-check text-dopamine-pink"></i>
+            <span>本輪需複習單字</span>
+          </h3>
+          <span id="summary-mistake-badge" class="text-xs font-black text-rose-600">0 題</span>
+        </div>
+        <div id="summary-mistake-list" class="flex flex-wrap gap-2 max-h-40 overflow-y-auto pr-1"></div>
+      </div>
+
+      <!-- 三大行動按鈕 -->
+      <div class="flex flex-col gap-3 pt-1">
+        <button type="button" id="btn-next-batch" class="btn-pop w-full bg-dopamine-yellow text-dopamine-dark font-black text-lg sm:text-xl py-4 rounded-2xl border-2 border-dopamine-dark shadow-pop flex items-center justify-center gap-2">
+          <span>🚀 再戰 20 題（優先抽未練過題目）</span>
+        </button>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <button type="button" id="btn-summary-mistake-drill" class="btn-pop bg-dopamine-pink text-white font-black text-base py-3.5 rounded-2xl border-2 border-dopamine-dark shadow-pop flex items-center justify-center gap-1.5">
+            <span>🔥 立即特訓錯題 (<span id="summary-total-mistakes-count">0</span>)</span>
+          </button>
+          <button type="button" id="btn-summary-switch-lesson" class="btn-pop bg-white text-dopamine-dark font-black text-base py-3.5 rounded-2xl border-2 border-dopamine-dark shadow-pop flex items-center justify-center gap-1.5">
+            <span>📚 切換其他課次</span>
+          </button>
+        </div>
+      </div>
+    </section>
   </main>
 
   <!-- ==================== 3. 錯題本彈窗 (Mistake Modal) ==================== -->
@@ -346,10 +406,13 @@
   <!-- ==================== 完整 161 題題庫與互動邏輯 ==================== -->
   <script>
     // =========================================================================
-    // ★ 請在此處貼上您部署好的 Google Apps Script (GAS) 網頁應用程式網址 ★
-    // 範例：const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycb.../exec";
+    // ★ 已預設綁定您的 Google Apps Script (GAS) 網頁應用程式網址 ★
     // =========================================================================
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyRhM1hghikwyqbunWkhkZG5zY5nKsBPDGhulVk-b1QxeSJog8RyF6_JmwU72TRIZHYPw/exec";
+
+    // 每輪智慧抽題數上限
+    const BATCH_SIZE = 20;
+    const SEEN_STORAGE_KEY = 'tcssh_vocab_seen_ids_v1';
 
     // L4 - L6 完整 161 題資料 (含句子實際填入字形 ans、原形 word、挖空句子 q、出處 src、搭配詞提示 col、單字中文 mean、整句翻譯 trans)
     const QUESTION_BANK = [
@@ -532,6 +595,37 @@
     let mistakes = [];
     let currentQuestionHintUsed = { col: false, mean: false };
 
+    // 本輪 (20題) 統計追蹤
+    let roundCorrect = 0;
+    let roundMaxStreak = 0;
+    let roundMistakes = [];
+    let cycleResetNotice = false;
+
+    // 智慧不重複題號紀錄 (依 ALL / L4 / L5 / L6 分別記憶已練過的題目 ID)
+    let seenTracker = {
+      ALL: [],
+      L4: [],
+      L5: [],
+      L6: []
+    };
+
+    try {
+      const savedSeen = localStorage.getItem(SEEN_STORAGE_KEY);
+      if (savedSeen) {
+        seenTracker = { ...seenTracker, ...JSON.parse(savedSeen) };
+      }
+    } catch (e) {
+      // 忽略 localStorage 讀取限制
+    }
+
+    function saveSeenTracker() {
+      try {
+        localStorage.setItem(SEEN_STORAGE_KEY, JSON.stringify(seenTracker));
+      } catch (e) {
+        // 忽略寫入限制
+      }
+    }
+
     let studentUser = {
       classNum: '',
       seatNum: '',
@@ -540,6 +634,8 @@
     };
 
     // DOM 元素
+    const quizCardSection = document.getElementById('quiz-card-section');
+    const roundSummaryCard = document.getElementById('round-summary-card');
     const answerInput = document.getElementById('answer-input');
     const typedLength = document.getElementById('typed-length-indicator');
     const clearBtn = document.getElementById('btn-clear-input');
@@ -564,20 +660,74 @@
       return copy;
     }
 
-    // 根據篩選條件建立題庫佇列
+    // 取得目前範圍的完整母題庫
+    function getFullPoolByFilter(filterType) {
+      if (filterType === 'ALL') return QUESTION_BANK;
+      if (filterType === 'MISTAKE') return mistakes;
+      return QUESTION_BANK.filter(item => item.lesson === filterType);
+    }
+
+    // 更新上方題庫探索進度徽章
+    function updatePoolCoverageUI() {
+      const covEl = document.getElementById('pool-coverage-text');
+      if (!covEl) return;
+
+      if (currentFilter === 'MISTAKE') {
+        covEl.textContent = `${mistakes.length} / ${mistakes.length}`;
+        return;
+      }
+
+      const fullPool = getFullPoolByFilter(currentFilter);
+      const seenList = seenTracker[currentFilter] || [];
+      covEl.textContent = `${Math.min(seenList.length, fullPool.length)} / ${fullPool.length}`;
+    }
+
+    // 方案 A：智慧不重複抽 20 題
     function buildDeck(filterType) {
       currentFilter = filterType;
       updateFilterChipStyles();
 
-      if (filterType === 'ALL') {
-        activeDeck = shuffleArray(QUESTION_BANK);
-      } else if (filterType === 'MISTAKE') {
-        activeDeck = mistakes.length === 0 ? [] : shuffleArray(mistakes);
+      // 切換回作答卡片、隱藏結算卡
+      quizCardSection.classList.remove('hidden');
+      roundSummaryCard.classList.add('hidden');
+
+      roundCorrect = 0;
+      roundMaxStreak = 0;
+      roundMistakes = [];
+      cycleResetNotice = false;
+
+      if (filterType === 'MISTAKE') {
+        activeDeck = mistakes.length === 0 ? [] : shuffleArray(mistakes).slice(0, BATCH_SIZE);
       } else {
-        activeDeck = QUESTION_BANK.filter(item => item.lesson === filterType);
+        const fullPool = getFullPoolByFilter(filterType);
+        let seenList = seenTracker[filterType] || [];
+
+        // 篩選出尚未考過的題目
+        let unseenPool = fullPool.filter(q => !seenList.includes(q.id));
+
+        // 若未考過的題目為 0，代表整輪題庫已經 100% 刷完一輪，重置紀錄重新洗牌
+        if (unseenPool.length === 0) {
+          seenTracker[filterType] = [];
+          seenList = [];
+          unseenPool = [...fullPool];
+          cycleResetNotice = true;
+        }
+
+        const shuffledUnseen = shuffleArray(unseenPool);
+
+        if (shuffledUnseen.length >= BATCH_SIZE) {
+          activeDeck = shuffledUnseen.slice(0, BATCH_SIZE);
+        } else {
+          // 若剩餘未練過的題目不足 20 題，先全數納入，再從已練過的題目隨機補足至 20 題，並於本輪後重置新一輪
+          const needed = BATCH_SIZE - shuffledUnseen.length;
+          const seenPool = shuffleArray(fullPool.filter(q => seenList.includes(q.id)));
+          activeDeck = [...shuffledUnseen, ...seenPool.slice(0, needed)];
+          cycleResetNotice = true;
+        }
       }
 
       currentIndex = 0;
+      updatePoolCoverageUI();
       renderCurrentQuestion();
     }
 
@@ -617,7 +767,7 @@
 
       if (activeDeck.length === 0) {
         document.getElementById('source-badge-text').textContent = '錯題本是空的 🎉';
-        document.getElementById('question-text').innerHTML = '目前沒有任何錯題喔！請點選上方「全部隨機」或各課按鈕繼續練習 💪';
+        document.getElementById('question-text').innerHTML = '目前沒有任何錯題喔！請點選上方「全部隨機」或各課按鈕開始 20 題挑戰 💪';
         document.getElementById('letter-clue-text').textContent = '';
         document.getElementById('progress-current').textContent = '0';
         document.getElementById('progress-total').textContent = '0';
@@ -632,7 +782,7 @@
 
       document.getElementById('progress-current').textContent = currentIndex + 1;
       document.getElementById('progress-total').textContent = activeDeck.length;
-      const pct = Math.max(2, Math.round(((currentIndex + 1) / activeDeck.length) * 100));
+      const pct = Math.max(4, Math.round(((currentIndex + 1) / activeDeck.length) * 100));
       document.getElementById('progress-bar').style.width = `${pct}%`;
 
       document.getElementById('source-badge-text').textContent = item.src;
@@ -651,11 +801,90 @@
       answerInput.focus();
     }
 
-    // 切換至下一題
+    // 顯示 20 題完賽結算小卡片
+    function showRoundSummary() {
+      quizCardSection.classList.add('hidden');
+      roundSummaryCard.classList.remove('hidden');
+
+      const totalInRound = activeDeck.length || 1;
+      const score = Math.round((roundCorrect / totalInRound) * 100);
+
+      document.getElementById('summary-score').textContent = score;
+      document.getElementById('summary-correct-ratio').textContent = `${roundCorrect} / ${totalInRound} 題`;
+      document.getElementById('summary-max-streak').textContent = `🔥 ${roundMaxStreak}`;
+
+      // 更新題庫探索進度文字
+      if (currentFilter === 'MISTAKE') {
+        document.getElementById('summary-pool-progress').textContent = `錯題特訓`;
+        document.getElementById('summary-cycle-badge').textContent = '🔥 錯題特訓完成！';
+      } else {
+        const fullPool = getFullPoolByFilter(currentFilter);
+        const seenCount = (seenTracker[currentFilter] || []).length;
+        document.getElementById('summary-pool-progress').textContent = `${Math.min(seenCount, fullPool.length)} / ${fullPool.length}`;
+
+        if (seenCount >= fullPool.length) {
+          document.getElementById('summary-cycle-badge').textContent = '🏆 恭喜完成本範圍 100% 題庫！下輪將開啟新循環';
+          seenTracker[currentFilter] = [];
+          saveSeenTracker();
+        } else if (cycleResetNotice) {
+          document.getElementById('summary-cycle-badge').textContent = '🔄 已開啟新一輪題庫循環！';
+        } else {
+          document.getElementById('summary-cycle-badge').textContent = '🎉 本輪 20 題挑戰完成！';
+        }
+      }
+
+      // 渲染本輪錯題清單
+      const mistakeListEl = document.getElementById('summary-mistake-list');
+      const mistakeBadgeEl = document.getElementById('summary-mistake-badge');
+      mistakeBadgeEl.textContent = `${roundMistakes.length} 題`;
+
+      if (roundMistakes.length === 0) {
+        mistakeListEl.innerHTML = `
+          <div class="w-full bg-emerald-100 border-2 border-emerald-700 text-emerald-950 font-black text-sm px-4 py-3 rounded-xl text-center">
+            🎯 太強了！本輪零失誤全對通過！
+          </div>
+        `;
+      } else {
+        mistakeListEl.innerHTML = roundMistakes.map(m => `
+          <span class="inline-flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-xl border-2 border-dopamine-dark text-xs sm:text-sm font-black">
+            <span class="text-rose-600">${m.ans}</span>
+            <span class="text-slate-500 font-bold">${m.mean}</span>
+          </span>
+        `).join('');
+      }
+
+      // 更新特訓錯題按鈕狀態
+      const totalMistakeBtn = document.getElementById('btn-summary-mistake-drill');
+      const totalMistakeCountEl = document.getElementById('summary-total-mistakes-count');
+      if (totalMistakeCountEl) totalMistakeCountEl.textContent = mistakes.length;
+      if (totalMistakeBtn) {
+        totalMistakeBtn.disabled = mistakes.length === 0;
+        totalMistakeBtn.classList.toggle('opacity-50', mistakes.length === 0);
+      }
+    }
+
+    // 切換至下一題或進入完賽結算卡
     function goToNextQuestion() {
       if (activeDeck.length === 0) return;
-      currentIndex = (currentIndex + 1) % activeDeck.length;
+      if (currentIndex + 1 >= activeDeck.length) {
+        showRoundSummary();
+        return;
+      }
+      currentIndex += 1;
       renderCurrentQuestion();
+    }
+
+    // 標記該題已練習過 (供方案 A 智慧不重複抽題使用)
+    function markQuestionSeen(item) {
+      if (!item) return;
+      ['ALL', item.lesson].forEach(scopeKey => {
+        if (!seenTracker[scopeKey]) seenTracker[scopeKey] = [];
+        if (!seenTracker[scopeKey].includes(item.id)) {
+          seenTracker[scopeKey].push(item.id);
+        }
+      });
+      saveSeenTracker();
+      updatePoolCoverageUI();
     }
 
     // 送出答案檢核 或 進入下一題
@@ -676,6 +905,9 @@
       const item = activeDeck[currentIndex];
       isChecked = true;
 
+      // 紀錄此題已考過
+      markQuestionSeen(item);
+
       feedbackCorrect.classList.add('hidden');
       feedbackWrong.classList.add('hidden');
 
@@ -687,13 +919,13 @@
 
       if (isCorrect) {
         totalCorrect += 1;
+        roundCorrect += 1;
         streak += 1;
+        if (streak > roundMaxStreak) roundMaxStreak = streak;
         document.getElementById('streak-count').textContent = streak;
         document.getElementById('correct-ans-display').textContent = item.ans;
         document.getElementById('correct-translation-text').textContent = item.trans;
         feedbackCorrect.classList.remove('hidden');
-
-        // 如果在錯題模式答對，可減少錯題計數或保留練習
       } else {
         streak = 0;
         document.getElementById('streak-count').textContent = '0';
@@ -701,6 +933,10 @@
         document.getElementById('wrong-correct-ans').textContent = item.ans;
         document.getElementById('wrong-translation-text').textContent = item.trans;
         feedbackWrong.classList.remove('hidden');
+
+        if (!roundMistakes.some(m => m.id === item.id)) {
+          roundMistakes.push(item);
+        }
 
         const existing = mistakes.find(m => m.id === item.id);
         if (existing) {
@@ -713,29 +949,26 @@
 
       updateStatsModalUI();
 
-      // 非同步傳送單題作答紀錄與彙整統計至 Google Apps Script 後台
+      // 非同步傳送單題作答紀錄與彙整統計至 Google Apps Script 後台 (100% 相容既有 Code.gs 欄位)
       sendRecordToGAS({
-        action: 'logAnswer',
+        action: 'answer',
         classNum: studentUser.classNum,
         seatNum: studentUser.seatNum,
         studentName: studentUser.name,
-        questionId: item.id,
-        lesson: item.lesson,
-        source: item.src,
-        targetWord: item.ans,
+        word: item.ans,
         userInput: userVal,
         isCorrect: isCorrect,
-        usedCollocationHint: currentQuestionHintUsed.col,
-        usedMeaningHint: currentQuestionHintUsed.mean,
+        source: item.src,
+        streak: streak,
         totalAnswered: totalAnswered,
         totalCorrect: totalCorrect,
-        streak: streak,
         mistakeWords: mistakes.map(m => `${m.ans}(${m.count})`).join(', ')
       });
 
+      const isLastQuestion = currentIndex + 1 >= activeDeck.length;
       submitBtn.className = 'btn-pop col-span-2 bg-dopamine-yellow text-dopamine-dark font-black text-lg sm:text-xl py-4 rounded-2xl border-2 border-dopamine-dark shadow-pop flex items-center justify-center gap-2';
-      submitBtnText.textContent = '下一題';
-      submitBtnIcon.className = 'fa-solid fa-arrow-right';
+      submitBtnText.textContent = isLastQuestion ? '查看本輪成績 🏆' : '下一題';
+      submitBtnIcon.className = isLastQuestion ? 'fa-solid fa-trophy' : 'fa-solid fa-arrow-right';
     }
 
     // 更新彈窗內的統計數據
@@ -875,6 +1108,25 @@
       document.getElementById('mistake-modal')?.classList.add('hidden');
       buildDeck('MISTAKE');
     });
+
+    // 20 題完賽結算小卡片按鈕綁定
+    safeOn('btn-next-batch', 'click', () => {
+      buildDeck(currentFilter);
+    });
+    safeOn('btn-summary-mistake-drill', 'click', () => {
+      if (mistakes.length > 0) {
+        buildDeck('MISTAKE');
+      }
+    });
+    safeOn('btn-summary-switch-lesson', 'click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      const filterBar = document.getElementById('filter-bar');
+      if (filterBar) {
+        filterBar.classList.add('ring-4', 'ring-dopamine-yellow', 'rounded-2xl');
+        setTimeout(() => filterBar.classList.remove('ring-4', 'ring-dopamine-yellow', 'rounded-2xl'), 1500);
+      }
+    });
+
     safeOn('btn-user-profile', 'click', () => {
       document.getElementById('login-modal')?.classList.remove('hidden');
     });

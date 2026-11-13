@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>段考單字衝刺營｜L4 - L6 課本 + All in One</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Google Fonts: Nunito & Noto Sans TC -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500;700;900&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Nunito', 'Noto Sans TC', 'sans-serif'],
+          },
+          colors: {
+            dopamine: {
+              bg: '#FFFDF7',
+              dark: '#1E293B',
+              yellow: '#FFE66D',
+              mint: '#4ECDC4',
+              pink: '#FF6B6B',
+              purple: '#845EC2',
+              blue: '#3B82F6',
+            }
+          },
+          boxShadow: {
+            'pop-sm': '2px 2px 0px #1E293B',
+            'pop': '4px 4px 0px #1E293B',
+            'pop-lg': '6px 6px 0px #1E293B',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #FFFDF7;
+      background-image: radial-gradient(#CBD5E1 1.2px, transparent 1.2px);
+      background-size: 20px 20px;
+    }
+    .btn-pop {
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+    .btn-pop:active {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0px #1E293B;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="text-dopamine-dark min-h-screen flex flex-col">
+
+  <!-- 頂部導覽列 -->
+  <header class="sticky top-0 z-30 bg-white/95 backdrop-blur border-b-4 border-dopamine-dark px-4 py-3">
+    <div class="max-w-xl mx-auto flex items-center justify-between gap-2">
+      <div class="flex items-center gap-2.5">
+        <div class="w-10 h-10 rounded-2xl bg-dopamine-yellow border-2 border-dopamine-dark shadow-pop-sm flex items-center justify-center text-xl">
+          ⚡
+        </div>
+        <div>
+          <h1 class="text-lg sm:text-xl font-black leading-tight">段考單字衝刺營</h1>
+          <p class="text-xs font-bold text-slate-500">L4 - L6 課本 + All in One</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <!-- 錯題本按鈕 -->
+        <button type="button" id="btn-mistake-drawer" class="btn-pop bg-dopamine-pink text-white font-black text-xs sm:text-sm px-3 py-2 rounded-2xl border-2 border-dopamine-dark shadow-pop-sm flex items-center gap-1.5">
+          <i class="fa-solid fa-book-skull"></i>
+          <span>錯題本</span>
+          <span id="mistake-count-badge" class="bg-dopamine-yellow text-dopamine-dark text-xs font-black px-1.5 py-0.5 rounded-full border border-dopamine-dark">0</span>
+        </button>
+
+        <!-- 登入 / GAS 同步狀態按鈕 -->
+        <button type="button" id="btn-user-profile" class="btn-pop bg-dopamine-blue text-white font-black text-xs sm:text-sm px-3 py-2 rounded-2xl border-2 border-dopamine-dark shadow-pop-sm flex items-center gap-1.5">
+          <i id="sync-status-icon" class="fa-regular fa-user"></i>
+          <span id="user-status-text">未登入</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 主要內容區 -->
+  <main class="flex-1 w-full max-w-xl mx-auto px-4 py-5 flex flex-col gap-4">
+
+    <!-- 1. 課次篩選與出題模式切換列 (可橫向滑動，手機單手好按) -->
+    <section aria-label="篩選課次與模式" class="flex flex-col gap-2.5">
+      <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1" id="filter-bar">
+        <button type="button" data-filter="ALL" class="filter-chip btn-pop shrink-0 bg-dopamine-yellow text-dopamine-dark font-black text-base px-4 py-2 rounded-2xl border-2 border-dopamine-dark shadow-pop-sm">
+          🎲 全部隨機 (161)
+        </button>
+        <button type="button" data-filter="L4" class="filter-chip btn-pop shrink-0 bg-white text-dopamine-dark font-bold text-base px-4 py-2 rounded-2xl border-2 border-dopamine-dark shadow-pop-sm hover:bg-slate-50">
+          Lesson 4 (60)
+        </button>
+        <button type="button" data-filter="L5" class="filter-chip btn-pop shrink-0 bg-white text-dopamine-dark font-bold text-base px-4 py-2 rounded-2xl border-2 border-dopamine-dark shadow-pop-sm hover:bg-slate-50">
+          Lesson 5 (53)
+        </button>
+        <button type="button" data-filter="L6" class="filter-chip btn-pop shrink-0 bg-white text-dopamine-dark font-bold text-base px-4 py-2 rounded-2xl border-2 border-dopamine-dark shadow-pop-sm hover:bg-slate-50">
+          Lesson 6 (48)
+        </button>
+        <button type="button" data-filter="MISTAKE" class="filter-chip btn-pop shrink-0 bg-purple-100 text-dopamine-dark font-extrabold text-base px-4 py-2 rounded-2xl border-2 border-dopamine-dark shadow-pop-sm">
+          🔥 專攻錯題 (<span id="chip-mistake-count">0</span>)
+        </button>
+      </div>
+
+      <!-- 進度條與答對率統計 -->
+      <div class="bg-white rounded-2xl border-2 border-dopamine-dark p-3 shadow-pop-sm flex items-center justify-between gap-3">
+        <div class="flex-1">
+          <div class="flex justify-between text-xs sm:text-sm font-extrabold mb-1">
+            <span>本輪進度：<span id="progress-current" class="text-dopamine-blue">1</span> / <span id="progress-total">161</span> 題</span>
+            <span class="text-emerald-600">連續答對 🔥 <span id="streak-count">0</span></span>
+          </div>
+          <div class="w-full h-3 bg-slate-100 rounded-full border border-dopamine-dark overflow-hidden">
+            <div id="progress-bar" class="h-full bg-dopamine-mint rounded-full transition-all duration-300" style="width: 1%;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. 核心答題卡片 (大字體、高對比、手機打字友善) -->
+    <section aria-label="單字測驗卡片" class="bg-white rounded-3xl border-4 border-dopamine-dark shadow-pop-lg p-5 sm:p-7 flex flex-col gap-5 relative">
+      
+      <!-- 卡片頂部：出處標籤 & 兩段式獨立救命提示按鈕 -->
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <span id="source-badge" class="inline-flex items-center gap-1.5 bg-dopamine-purple text-white text-xs sm:text-sm font-extrabold px-3.5 py-1.5 rounded-xl border-2 border-dopamine-dark">
+          <i class="fa-solid fa-bookmark"></i>
+          <span id="source-badge-text">L4 課本單字例句</span>
+        </span>
+
+        <!-- 兩個獨立救命按鈕：按了才顯示提示 -->
+        <div class="flex items-center gap-2">
+          <button type="button" id="btn-hint-collocation" class="btn-pop bg-dopamine-yellow text-dopamine-dark font-black text-xs sm:text-sm px-3 py-2 rounded-xl border-2 border-dopamine-dark shadow-pop-sm flex items-center gap-1.5">
+            <i class="fa-solid fa-lightbulb text-amber-700"></i>
+            <span>1. 搭配詞提示</span>
+          </button>
+          <button type="button" id="btn-hint-meaning" class="btn-pop bg-orange-200 text-dopamine-dark font-black text-xs sm:text-sm px-3 py-2 rounded-xl border-2 border-dopamine-dark shadow-pop-sm flex items-center gap-1.5">
+            <i class="fa-solid fa-language text-rose-600"></i>
+            <span>2. 單字中文</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 題目英文句子區 (字體放大至 20px-24px，行距寬鬆) -->
+      <div class="bg-amber-50/70 rounded-2xl border-2 border-dashed border-amber-300 p-4 sm:p-5 flex flex-col gap-3">
+        <p id="question-text" class="text-xl sm:text-2xl font-bold leading-relaxed tracking-wide text-dopamine-dark"></p>
+
+        <!-- 救命提示 1 顯示區：按了「1. 搭配詞提示」才顯示 (預設 hidden) -->
+        <div id="collocation-hint-box" class="hidden pt-2.5 border-t-2 border-amber-200 flex flex-wrap items-center gap-2">
+          <span class="bg-dopamine-yellow text-dopamine-dark text-xs font-black px-2.5 py-1 rounded-lg border border-dopamine-dark shrink-0">
+            💡 搭配詞線索
+          </span>
+          <span id="collocation-hint-text" class="bg-yellow-200 px-3 py-1 rounded-xl border-2 border-dopamine-dark text-base sm:text-lg font-black text-dopamine-dark tracking-wide"></span>
+        </div>
+
+        <!-- 救命提示 2 顯示區：按了「2. 單字中文」才顯示 (預設 hidden) -->
+        <div id="meaning-hint-box" class="hidden pt-2.5 border-t-2 border-amber-200 flex flex-wrap items-center gap-2">
+          <span class="bg-dopamine-pink text-white text-xs font-black px-2.5 py-1 rounded-lg border border-dopamine-dark shrink-0">
+            🔤 目標單字中文
+          </span>
+          <span id="meaning-hint-text" class="text-base sm:text-lg font-black text-rose-700"></span>
+        </div>
+      </div>
+
+      <!-- 手機打字輸入框區 -->
+      <div class="flex flex-col gap-2.5">
+        <label for="answer-input" class="sr-only">請輸入完整英文單字</label>
+        <div class="relative">
+          <input 
+            type="text" 
+            id="answer-input" 
+            autocomplete="off" 
+            autocorrect="off" 
+            autocapitalize="none" 
+            spellcheck="false"
+            inputmode="latin"
+            placeholder="請輸入完整單字..."
+            class="w-full text-2xl sm:text-3xl font-black tracking-wider text-center py-4 px-5 rounded-2xl border-4 border-dopamine-dark bg-slate-50 focus:bg-white focus:outline-none focus:ring-4 focus:ring-dopamine-yellow transition-all"
+          >
+          <!-- 清除輸入按鈕 -->
+          <button type="button" id="btn-clear-input" aria-label="清除輸入" class="absolute right-3.5 top-1/2 -translate-y-1/2 w-9 h-9 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-600 flex items-center justify-center font-bold">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <!-- 字母數提示與狀態提示 -->
+        <div class="flex justify-between items-center px-1 text-sm font-bold text-slate-500">
+          <span id="letter-clue-text"></span>
+          <span id="typed-length-indicator" class="text-dopamine-blue">已輸入：0 字</span>
+        </div>
+      </div>
+
+      <!-- ==================== 作答結果回饋區 (送出答案後才顯示，含整句翻譯) ==================== -->
+      <!-- 狀態 A：答對綠色顯示 (預設 hidden) -->
+      <div id="feedback-correct" class="hidden rounded-2xl border-4 border-emerald-700 bg-emerald-100 p-4 flex flex-col gap-2.5">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-2xl bg-emerald-500 text-white border-2 border-emerald-800 flex items-center justify-center text-2xl shrink-0">
+            <i class="fa-solid fa-check"></i>
+          </div>
+          <div>
+            <p class="text-lg sm:text-xl font-black text-emerald-900">太棒了！拼字完全正確 🎉</p>
+            <p class="text-sm font-bold text-emerald-800">正確答案：<span id="correct-ans-display" class="underline text-base font-black"></span></p>
+          </div>
+        </div>
+        <div class="pt-2 border-t-2 border-emerald-300/80 text-sm sm:text-base font-bold text-emerald-950 flex items-start gap-2">
+          <span class="bg-emerald-600 text-white text-xs font-black px-2 py-0.5 rounded-md shrink-0 mt-0.5">整句翻譯</span>
+          <p id="correct-translation-text"></p>
+        </div>
+      </div>
+
+      <!-- 狀態 B：答錯紅色顯示 (預設 hidden) -->
+      <div id="feedback-wrong" class="hidden rounded-2xl border-4 border-rose-700 bg-rose-100 p-4 flex flex-col gap-2.5">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-2xl bg-rose-500 text-white border-2 border-rose-800 flex items-center justify-center text-2xl shrink-0">
+            <i class="fa-solid fa-xmark"></i>
+          </div>
+          <div>
+            <p class="text-lg sm:text-xl font-black text-rose-900">差一點點！已加入錯題本 📌</p>
+            <p class="text-sm font-bold text-rose-800">
+              你的輸入：<span id="user-wrong-input" class="line-through mr-2"></span> 
+              正確：<span id="wrong-correct-ans" class="text-base font-black underline text-rose-950"></span>
+            </p>
+          </div>
+        </div>
+        <div class="pt-2 border-t-2 border-rose-300/80 text-sm sm:text-base font-bold text-rose-950 flex items-start gap-2">
+          <span class="bg-rose-600 text-white text-xs font-black px-2 py-0.5 rounded-md shrink-0 mt-0.5">整句翻譯</span>
+          <p id="wrong-translation-text"></p>
+        </div>
+      </div>
+
+      <!-- 底部主要操作按鈕列 -->
+      <div class="grid grid-cols-3 gap-3 pt-1">
+        <button type="button" id="btn-skip" class="btn-pop col-span-1 bg-slate-200 text-dopamine-dark font-extrabold text-base sm:text-lg py-4 rounded-2xl border-2 border-dopamine-dark shadow-pop">
+          跳過 ⏭️
+        </button>
+        <button type="button" id="btn-submit" class="btn-pop col-span-2 bg-dopamine-mint text-dopamine-dark font-black text-lg sm:text-xl py-4 rounded-2xl border-2 border-dopamine-dark shadow-pop flex items-center justify-center gap-2">
+          <span id="btn-submit-text">送出答案</span>
+          <i id="btn-submit-icon" class="fa-solid fa-paper-plane"></i>
+        </button>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- ==================== 3. 錯題本彈窗 (Mistake Modal) ==================== -->
+  <div id="mistake-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-dopamine-bg w-full max-w-lg rounded-3xl border-4 border-dopamine-dark shadow-pop-lg p-5 sm:p-6 flex flex-col gap-4 max-h-[85vh]">
+      <div class="flex items-center justify-between border-b-2 border-dopamine-dark pb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">📓</span>
+          <h2 class="text-xl font-black">我的錯題本 (<span id="mistake-modal-count">0</span>)</h2>
+        </div>
+        <button type="button" id="btn-close-mistake" class="w-9 h-9 rounded-xl bg-slate-200 hover:bg-slate-300 border-2 border-dopamine-dark font-black flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div id="mistake-list-container" class="flex-1 overflow-y-auto flex flex-col gap-2.5 pr-1">
+        <p class="text-center text-slate-500 font-bold py-8">目前還沒有錯題喔！繼續保持 💪</p>
+      </div>
+
+      <div class="pt-2 border-t-2 border-dopamine-dark flex gap-3">
+        <button type="button" id="btn-start-mistake-drill" class="btn-pop w-full bg-dopamine-pink text-white font-black text-lg py-3.5 rounded-2xl border-2 border-dopamine-dark shadow-pop">
+          🔥 立即特訓所有錯題
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 4. 學生登入與 GAS 同步預留彈窗 ==================== -->
+  <div id="login-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-md rounded-3xl border-4 border-dopamine-dark shadow-pop-lg p-6 flex flex-col gap-4">
+      <div class="flex items-center justify-between border-b-2 border-dopamine-dark pb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">🚀</span>
+          <h2 class="text-xl font-black">學生登入（雲端成績同步）</h2>
+        </div>
+        <button type="button" id="btn-close-login" class="w-9 h-9 rounded-xl bg-slate-200 hover:bg-slate-300 border-2 border-dopamine-dark font-black flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <p class="text-xs sm:text-sm font-bold text-slate-600 bg-amber-50 p-3 rounded-xl border border-amber-300">
+        💡 請輸入你的班級、座號與姓名，系統會自動將你的練習進度與錯題同步給老師！
+      </p>
+
+      <div class="flex flex-col gap-3">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-sm font-black mb-1" for="login-class">班級（如：201）</label>
+            <input type="text" id="login-class" inputmode="numeric" placeholder="201" class="w-full px-4 py-3 rounded-xl border-2 border-dopamine-dark font-black text-lg focus:outline-none focus:ring-2 focus:ring-dopamine-yellow">
+          </div>
+          <div>
+            <label class="block text-sm font-black mb-1" for="login-seat">座號（如：05）</label>
+            <input type="text" id="login-seat" inputmode="numeric" placeholder="05" class="w-full px-4 py-3 rounded-xl border-2 border-dopamine-dark font-black text-lg focus:outline-none focus:ring-2 focus:ring-dopamine-yellow">
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-black mb-1" for="login-student-name">姓名</label>
+          <input type="text" id="login-student-name" placeholder="請輸入真實姓名" class="w-full px-4 py-3 rounded-xl border-2 border-dopamine-dark font-black text-lg focus:outline-none focus:ring-2 focus:ring-dopamine-yellow">
+        </div>
+      </div>
+
+      <!-- 登入錯誤提示訊息 -->
+      <p id="login-error-msg" class="hidden text-sm font-black text-rose-600 text-center">⚠️ 請完整填寫班級、座號與姓名喔！</p>
+
+      <!-- 本次作答統計快覽 -->
+      <div class="bg-slate-100 rounded-2xl p-3 border-2 border-dopamine-dark flex justify-around text-center">
+        <div>
+          <p class="text-xs font-bold text-slate-500">已練習題數</p>
+          <p id="stat-total-answered" class="text-lg font-black text-dopamine-blue">0</p>
+        </div>
+        <div class="border-l border-slate-300"></div>
+        <div>
+          <p class="text-xs font-bold text-slate-500">答對題數</p>
+          <p id="stat-total-correct" class="text-lg font-black text-emerald-600">0</p>
+        </div>
+        <div class="border-l border-slate-300"></div>
+        <div>
+          <p class="text-xs font-bold text-slate-500">雲端同步狀態</p>
+          <p id="stat-sync-label" class="text-xs font-black text-slate-700 mt-1">尚未連線</p>
+        </div>
+      </div>
+
+      <div class="flex gap-2 mt-1">
+        <button type="button" id="btn-manual-sync" class="btn-pop flex-1 bg-dopamine-yellow text-dopamine-dark font-black text-base py-3.5 rounded-2xl border-2 border-dopamine-dark shadow-pop">
+          ☁️ 立即上傳成績
+        </button>
+        <button type="button" id="btn-confirm-login" class="btn-pop flex-1 bg-dopamine-blue text-white font-black text-base py-3.5 rounded-2xl border-2 border-dopamine-dark shadow-pop">
+          儲存並開始
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 完整 161 題題庫與互動邏輯 ==================== -->
+  <script>
+    // =========================================================================
+    // ★ 請在此處貼上您部署好的 Google Apps Script (GAS) 網頁應用程式網址 ★
+    // 範例：const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycb.../exec";
+    // =========================================================================
+    const GAS_WEB_APP_URL = "請替換為您的_GAS_網頁應用程式網址";
+
+    // L4 - L6 完整 161 題資料 (含句子實際填入字形 ans、原形 word、挖空句子 q、出處 src、搭配詞提示 col、單字中文 mean、整句翻譯 trans)
+    const QUESTION_BANK = [
+      // ==================== Lesson 4 (60 題) ====================
+      { id: 1, lesson: 'L4', word: 'sensitive', ans: 'sensitive', q: 'Kelly is very s_______e to flavors. She can taste any food or drink and name it without seeing it.', src: 'L4 課本單字例句', col: 'be _____ to flavors', mean: '敏感的 (adj.)', trans: 'Kelly 對味道很敏感，不用看就知道吃了或喝了什麼。' },
+      { id: 2, lesson: 'L4', word: 'keen', ans: 'keen', q: 'The owl has such a k__n sense of hearing that it can hunt animals in the dark.', src: 'L4 課本單字例句', col: 'a _____ sense of hearing', mean: '敏銳的 (adj.)', trans: '貓頭鷹聽覺非常敏銳，所以可以在黑暗中獵食。' },
+      { id: 3, lesson: 'L4', word: 'keen', ans: 'keen', q: "Jamie is k__n on making his classroom's Facebook page the most interesting one in the school.", src: 'L4 課本單字例句', col: 'be _____ on making...', mean: '渴望的；熱衷的 (adj.)', trans: 'Jamie 熱切地希望將班上的臉書專頁打造成全校最有趣的。' },
+      { id: 4, lesson: 'L4', word: 'detect', ans: 'detect', q: 'For most people, it is not easy to d____t a small change in temperature.', src: 'L4 課本單字例句', col: 'to _____ a small change', mean: '偵測到；察覺 (vt.)', trans: '多數人不易察覺溫度的細微變化。' },
+      { id: 5, lesson: 'L4', word: 'detect', ans: 'detect', q: 'If you d____t thick smoke in your house, you should call the fire department at once.', src: 'L4 All in One 一、文意字彙', col: '_____ thick smoke', mean: '偵測到；察覺 (vt.)', trans: '如果你察覺屋內有濃煙，應該立刻打電話給消防隊。' },
+      { id: 6, lesson: 'L4', word: 'item', ans: 'items', q: 'More than half of the i__ms in the clothing store were on sale for one day only.', src: 'L4 課本單字例句', col: 'half of the _____ in the store (複數)', mean: '品項；物品 (n.)', trans: '那間服飾店超過半數的品項有單日特價。' },
+      { id: 7, lesson: 'L4', word: 'accomplish', ans: 'accomplished', q: 'Albert respects those who have a________hed something great in their lives.', src: 'L4 課本單字例句', col: 'have _____ something great (完成式)', mean: '達成；完成 (vt.)', trans: 'Albert 尊敬那些在生活中成就卓越的人。' },
+      { id: 8, lesson: 'L4', word: 'accomplish', ans: 'accomplish', q: 'I plan to a________h a lot of tasks today, so I am trying to focus on what I am doing now and not to get distracted.', src: 'L4 All in One 一、文意字彙', col: 'plan to _____ a lot of tasks', mean: '達成；完成 (vt.)', trans: '我今天計畫要完成許多任務，所以我正試著專注於當下所做的事而不分心。' },
+      { id: 9, lesson: 'L4', word: 'accomplishment', ans: 'accomplishment', q: 'Marc felt that leading his basketball team to the city final was his greatest a____________t of the year.', src: 'L4 課本衍生字例句', col: 'his greatest _____ of the year', mean: '成就 (n.)', trans: 'Marc 覺得帶領他的籃球隊挺進全市決賽是他今年最大的成就。' },
+      { id: 10, lesson: 'L4', word: 'disease', ans: 'disease', q: 'Washing your hands often is a good way to stop the spread of d_____e.', src: 'L4 課本單字例句', col: 'stop the spread of _____', mean: '疾病 (n.)', trans: '常洗手是預防疾病傳染的好方法。' },
+      { id: 11, lesson: 'L4', word: 'disease', ans: 'disease', q: "Lynn's grandmother is suffering from a serious heart d_____e, so she is staying in a hospital.", src: 'L4 課本單字例句', col: 'suffer from a serious heart _____', mean: '疾病 (n.)', trans: 'Lynn 的祖母罹患嚴重的心臟病，現正住院中。' },
+      { id: 12, lesson: 'L4', word: 'disease', ans: 'disease', q: "Research has shown that smoking can increase one's risk of developing heart d_____e.", src: 'L4 All in One 一、文意字彙', col: 'developing heart _____', mean: '疾病 (n.)', trans: '研究顯示吸菸會增加罹患心臟病的風險。' },
+      { id: 13, lesson: 'L4', word: 'infected', ans: 'infected', q: 'Several passengers were found to have the disease after they took the same flight as an i______d person.', src: 'L4 課本單字例句', col: 'an _____ person', mean: '遭感染的 (adj.)', trans: '數位旅客在與感染者搭同一班飛機後也被發現患病了。' },
+      { id: 14, lesson: 'L4', word: 'infected', ans: 'infected', q: 'It is reported that an Arizona woman was pricked by an HIV-i______d needle and later died of AIDS.', src: 'L4 All in One 一、文意字彙', col: 'an HIV-_____ needle', mean: '遭感染的 (adj.)', trans: '據報導一名亞利桑那州女子被感染 HIV 的針頭刺傷，後來死於愛滋病。' },
+      { id: 15, lesson: 'L4', word: 'infect', ans: 'infected', q: 'More than 70 million people have been i____ted with AIDS in the last 50 years.', src: 'L4 課本衍生字例句', col: 'have been _____ with AIDS (被動)', mean: '感染 (vt.)', trans: '過去五十年來，超過七千萬人感染愛滋病。' },
+      { id: 16, lesson: 'L4', word: 'infection', ans: 'infection', q: "The boy developed a serious i_______n on his leg because he didn't clean the wound after he fell.", src: 'L4 課本衍生字例句', col: 'developed a serious _____ on his leg', mean: '感染 (n.)', trans: '這名小男孩跌倒後並未清理傷口，因此腿部出現了嚴重的感染。' },
+      { id: 17, lesson: 'L4', word: 'infection', ans: 'infection', q: "You shouldn't rub your eyes because it can cause i_______n.", src: 'L4 課本衍生字例句', col: 'can cause _____', mean: '感染 (n.)', trans: '你不能揉眼睛，因為這樣會導致感染。' },
+      { id: 18, lesson: 'L4', word: 'locate', ans: 'locate', q: "These days, most taxi drivers use GPS to l____e places they don't know how to drive to.", src: 'L4 課本單字例句', col: 'use GPS to _____ places', mean: '找到……的位置 (vt.)', trans: '現在，多數的計程車司機都用 GPS 找到他們不知道路的地方。' },
+      { id: 19, lesson: 'L4', word: 'location', ans: 'location', q: 'This hotel is very expensive because it is in a good l______n right beside a beach.', src: 'L4 課本衍生字例句', col: 'in a good _____ right beside a beach', mean: '地點；位置 (n.)', trans: '這間飯店很貴，因為就位在海灘旁絕佳的地點。' },
+      { id: 20, lesson: 'L4', word: 'location', ans: 'location', q: 'I like the apartment a lot because the rent is not high and the l______n is perfect.', src: 'L4 All in One 二、詞類變化', col: 'the _____ is perfect', mean: '地點；位置 (n.)', trans: '我非常喜歡這間公寓，因為租金不高且地點完美。' },
+      { id: 21, lesson: 'L4', word: 'reward', ans: 'reward', q: 'Janice was given a r____d of $2,000 for informing the police of the address of the man they were searching for.', src: 'L4 課本單字例句', col: 'was given a _____ of $2,000', mean: '獎勵；報酬；賞金 (n.)', trans: 'Janice 告知警方他們追緝中的男子的地址，因此獲贈 2,000 元的賞金。' },
+      { id: 22, lesson: 'L4', word: 'reward', ans: 'reward', q: 'Larry feels satisfied when he helps strangers, even if there is no r____d.', src: 'L4 課本單字例句', col: 'even if there is no _____', mean: '獎勵；報酬 (n.)', trans: 'Larry 覺得幫助陌生人很有滿足感，就算沒有報酬也無妨。' },
+      { id: 23, lesson: 'L4', word: 'reward', ans: 'reward', q: 'Our teacher gave us cookies as a r____d for doing well on the exam.', src: 'L4 All in One 一、文意字彙', col: 'as a _____ for doing well', mean: '獎勵；報酬 (n.)', trans: '我們老師給我們餅乾作為考得好的獎勵。' },
+      { id: 24, lesson: 'L4', word: 'reward', ans: 'rewarded', q: 'The teacher r____ded each of the students with a small prize after they all passed the exam.', src: 'L4 課本衍生字例句', col: '_____ each of the students with a prize (過去式)', mean: '獎賞；提供報酬 (vt.)', trans: '老師給每位學生小獎品，以獎勵他們考試全數及格。' },
+      { id: 25, lesson: 'L4', word: 'ability', ans: 'ability', q: 'Eagles have the a_____y to fly without landing for over three hours.', src: 'L4 課本單字例句', col: 'have the _____ to fly', mean: '能力 (n.)', trans: '老鷹有飛行超過三小時不需著地的能力。' },
+      { id: 26, lesson: 'L4', word: 'ability', ans: 'ability', q: 'I am surprised to learn that Emma has the a_____y to speak six languages.', src: 'L4 All in One 一、文意字彙', col: 'has the _____ to speak six languages', mean: '能力 (n.)', trans: '我很驚訝地得知 Emma 有說六種語言的能力。' },
+      { id: 27, lesson: 'L4', word: 'predict', ans: 'predicted', q: 'The weatherperson p_____ted that it would start raining around 6:00 p.m., and she was correct.', src: 'L4 課本單字例句', col: '_____ that it would start raining (過去式)', mean: '預測 (vt.)', trans: '氣象人員預報晚上六點左右會開始下雨，果然沒錯。' },
+      { id: 28, lesson: 'L4', word: 'predict', ans: 'predict', q: 'Since both of their parents died in the accident, it is hard to p_____t what will become of the kids.', src: 'L4 All in One 一、文意字彙', col: 'hard to _____ what will become of...', mean: '預測 (vt.)', trans: '由於他們的父母都在意外中喪生，很難預測這些孩子未來會變得如何。' },
+      { id: 29, lesson: 'L4', word: 'manage', ans: 'managed', q: 'Kyle m____ged to lose twenty pounds by exercising every day and eating less junk food.', src: 'L4 課本單字例句', col: '_____ to lose twenty pounds (過去式)', mean: '設法成功做到 (vt./vi.)', trans: 'Kyle 靠著每天運動並且少吃垃圾食物成功瘦下 20 磅。' },
+      { id: 30, lesson: 'L4', word: 'manage', ans: 'managed', q: "Joey wasn't sure that he could handle living abroad, but he m____ged quite well.", src: 'L4 課本單字例句', col: 'he _____ quite well (過去式)', mean: '能夠應付 (vi.)', trans: 'Joey 不確定自己是否能適應國外生活，但他應付得相當不錯。' },
+      { id: 31, lesson: 'L4', word: 'manage', ans: 'manage', q: "Hailey's parents told her that she should m____e her money more carefully and stop wasting it.", src: 'L4 課本單字例句', col: 'should _____ her money more carefully', mean: '明智地使用、管理 (vt.)', trans: 'Hailey 的爸媽要她更小心管理金錢，不要亂花。' },
+      { id: 32, lesson: 'L4', word: 'manage', ans: 'manage', q: 'If teachers wish to m____e their classes effectively on the first day of school, they had better lay down some ground rules.', src: 'L4 All in One 一、文意字彙', col: 'wish to _____ their classes effectively', mean: '管理；經營 (vt.)', trans: '如果老師希望在開學第一天有效管理班級，最好先訂下一些基本規則。' },
+      { id: 33, lesson: 'L4', word: 'management', ans: 'management', q: 'For busy people like the president of a country, good time m________t is of great importance.', src: 'L4 課本衍生字例句', col: 'good time _____ is of great importance', mean: '管理 (n.)', trans: '對於一國總統這樣的忙人來說，良好的時間管理非常重要。' },
+      { id: 34, lesson: 'L4', word: 'create', ans: 'created', q: 'The inventor of the telephone, Antonio Meucci, c____ted a new way for humans to communicate.', src: 'L4 課本單字例句', col: '_____ a new way for humans (過去式)', mean: '創造；產生出 (vt.)', trans: '電話的發明者 Antonio Meucci 創造了一種讓人類溝通的新方式。' },
+      { id: 35, lesson: 'L4', word: 'creation', ans: 'creation', q: "After the c______n of the movie theater's website, few people called to find out what movies were playing.", src: 'L4 課本衍生字例句', col: "After the _____ of the website", mean: '創造；創建 (n.)', trans: '在創建這個電影院的網站之後，很少人會打電話去查詢有什麼電影正在上映了。' },
+      { id: 36, lesson: 'L4', word: 'creative', ans: 'creative', q: 'Nicole always has interesting new ideas, and she shows that in her c______e paintings and drawings.', src: 'L4 課本衍生字例句', col: 'in her _____ paintings and drawings', mean: '有創意的 (adj.)', trans: 'Nicole 永遠都有有趣的新點子，也展現在她富含創意的畫作上。' },
+      { id: 37, lesson: 'L4', word: 'creativity', ans: 'creativity', q: 'The students in the class showed great c________y in the wide range of topics they chose for their articles.', src: 'L4 課本衍生字例句', col: 'showed great _____', mean: '創意；創造力 (n.)', trans: '這個班的學生們選擇的文章主題範圍相當廣，展現了十足的創意。' },
+      { id: 38, lesson: 'L4', word: 'creativity', ans: 'creativity', q: 'It takes c________y to keep coming up with interesting new ideas.', src: 'L4 All in One 二、詞類變化', col: 'It takes _____ to keep coming up with...', mean: '創意；創造力 (n.)', trans: '要持續想出有趣的新點子需要創造力。' },
+      { id: 39, lesson: 'L4', word: 'expose', ans: 'exposed', q: 'By reading these articles, students will be e____sed to different opinions about the topic.', src: 'L4 課本單字例句', col: 'will be _____ to different opinions (被動)', mean: '使接觸；使體驗 (vt.)', trans: '通過閱讀這些文章，學生將會接觸到關於該主題不同的意見。' },
+      { id: 40, lesson: 'L4', word: 'expose', ans: 'exposed', q: "It's important to wear sunglasses on sunny days because your eyes could be injured if they are e____sed for too long.", src: 'L4 課本單字例句', col: 'if they are _____ for too long (被動)', mean: '使暴露於 (vt.)', trans: '晴天時戴太陽眼鏡是重要的，不然眼睛暴露在陽光下太久會受傷。' },
+      { id: 41, lesson: 'L4', word: 'exposure', ans: 'exposure', q: 'Too much e______e to the sun and wind caused the paint on the building to come off.', src: 'L4 課本衍生字例句', col: 'Too much _____ to the sun and wind', mean: '暴露；接觸 (n.)', trans: '大量的風吹日曬造成大樓外牆油漆剝落。' },
+      { id: 42, lesson: 'L4', word: 'exposure', ans: 'exposure', q: 'Studies have shown that e______e to too much solar radiation will cause skin cancer.', src: 'L4 All in One 二、詞類變化', col: '_____ to too much solar radiation', mean: '暴露；接觸 (n.)', trans: '研究顯示暴露於過多太陽輻射會導致皮膚癌。' },
+      { id: 43, lesson: 'L4', word: 'perform', ans: 'perform', q: 'After Mrs. Checknita fell ill, her family hired someone to help her p_____m daily tasks.', src: 'L4 課本單字例句', col: 'help her _____ daily tasks', mean: '執行；做 (vt.)', trans: '在 Checknita 太太生病後，她的家人僱人來幫助她執行日常事務。' },
+      { id: 44, lesson: 'L4', word: 'perform', ans: 'performed', q: 'Brad p_____med a song as a creative way to ask Jennifer to marry him.', src: 'L4 課本單字例句', col: '_____ a song as a creative way (過去式)', mean: '表演；演唱 (vt.)', trans: 'Brad 演唱了一首歌，當作向 Jennifer 求婚的創意方式。' },
+      { id: 45, lesson: 'L4', word: 'perform', ans: 'perform', q: 'The band has practiced a lot, and this show will be the first time they p_____m on stage.', src: 'L4 課本單字例句', col: 'the first time they _____ on stage', mean: '表演 (vi.)', trans: '這個樂團練了很久，這場表演是他們首次登臺演出。' },
+      { id: 46, lesson: 'L4', word: 'perform', ans: 'perform', q: "To catch Julie's attention, Mike dressed up and even asked for a chance to p_____m magic at the party.", src: 'L4 All in One 一、文意字彙', col: 'a chance to _____ magic', mean: '表演 (vt.)', trans: '為了吸引 Julie 的注意，Mike 盛裝打扮甚至要求在派對上表演魔術的機會。' },
+      { id: 47, lesson: 'L4', word: 'performance', ans: 'performance', q: 'The magician will give a p_________e of his best tricks at the end of the evening show.', src: 'L4 課本衍生字例句', col: 'give a _____ of his best tricks', mean: '表演；演出 (n.)', trans: '今晚魔術秀的結尾，魔術師會表演他的拿手絕活。' },
+      { id: 48, lesson: 'L4', word: 'behavior', ans: 'behavior', q: 'Animal b______r can tell us a lot about what a creature is thinking about or wants.', src: 'L4 課本單字例句', col: 'Animal _____ can tell us...', mean: '行為 (n.)', trans: '動物行為可以讓我們清楚知道動物在想什麼或想要什麼。' },
+      { id: 49, lesson: 'L4', word: 'behave', ans: 'behaved', q: 'All the guests were impressed by how little Mandy b____ved like an adult.', src: 'L4 課本衍生字例句', col: 'how little Mandy _____ like an adult (過去式)', mean: '表現；舉止 (vi.)', trans: '所有的客人都對小 Mandy 大人般的行為舉止留下深刻印象。' },
+      { id: 50, lesson: 'L4', word: 'behave', ans: 'behave', q: "Mother said that she wouldn't allow us to watch TV if we couldn't b____e ourselves.", src: 'L4 All in One 二、詞類變化', col: "couldn't _____ ourselves (守規矩)", mean: '表現得體；守規矩 (vt.)', trans: '媽媽說如果我們不守規矩，就不准我們看電視。' },
+      { id: 51, lesson: 'L4', word: 'alert', ans: 'alert', q: 'Everybody was asked to leave the mall due to a bomb a___t in one of the stores.', src: 'L4 課本單字例句', col: 'due to a bomb _____', mean: '警報；警示 (n.)', trans: '所有人都被要求離開購物中心，因為其中一間店有炸彈警報。' },
+      { id: 52, lesson: 'L4', word: 'alert', ans: 'alert', q: 'The little beeps that your phone makes help you stay a___t to new emails, messages, and posts.', src: 'L4 課本衍生字例句', col: 'stay _____ to new emails', mean: '警覺的；留心的 (adj.)', trans: '你的手機發出的小小嗶嗶聲會提醒你注意新的郵件、訊息或貼文。' },
+      { id: 53, lesson: 'L4', word: 'complete', ans: 'complete', q: 'The race is not c______e until every runner from every team crosses the finish line.', src: 'L4 課本單字例句', col: 'The race is not _____ until...', mean: '已完成的；結束的 (adj.)', trans: '比賽要等到各隊的每位跑者都跨過終點線才算結束。' },
+      { id: 54, lesson: 'L4', word: 'complete', ans: 'complete', q: 'In this English literature course, we will study the c______e works of Shakespeare.', src: 'L4 課本單字例句', col: 'the _____ works of Shakespeare', mean: '完整的；全套的 (adj.)', trans: '在這門英國文學課程裡，我們將會研讀整套莎士比亞的作品。' },
+      { id: 55, lesson: 'L4', word: 'complete', ans: 'completes', q: 'Kevin is an excellent student. He always c______tes school projects long before they are due.', src: 'L4 課本衍生字例句', col: 'He always _____ school projects (三單)', mean: '完成 (vt.)', trans: 'Kevin 是個優秀的學生，他總是於期限前的一大段時間便完成學校的報告。' },
+      { id: 56, lesson: 'L4', word: 'assign', ans: 'assigned', q: 'Craig was a____ned the task of giving the new students a tour of the school.', src: 'L4 課本單字例句', col: 'was _____ the task of... (被動)', mean: '指派；分配 (vt.)', trans: 'Craig 被指派一項帶著新學生校園導覽的任務。' },
+      { id: 57, lesson: 'L4', word: 'assignment', ans: 'assignment', q: 'The students are going to Tainan on an a________t for history class.', src: 'L4 課本衍生字例句', col: 'on an _____ for history class', mean: '(分派的)作業；任務 (n.)', trans: '這些學生將到臺南做歷史課的作業。' },
+      { id: 58, lesson: 'L4', word: 'assignment', ans: 'assignment', q: 'Our a________t today is to read twenty pages in our science textbook.', src: 'L4 All in One 二、詞類變化', col: 'Our _____ today is to read...', mean: '作業；任務 (n.)', trans: '我們今天的作業是閱讀自然課本的二十頁內容。' },
+      { id: 59, lesson: 'L4', word: 'specific', ans: 'specific', q: "There wasn't any s______c reason why Jason didn't attend the performance with his friends. He just didn't feel like it.", src: 'L4 課本單字例句', col: "any _____ reason", mean: '特定的；明確的 (adj.)', trans: 'Jason 沒有和朋友一起去觀賞演出並沒有什麼特別理由。他純粹是不想去罷了。' },
+      { id: 60, lesson: 'L4', word: 'specific', ans: 'specific', q: "I go to the supermarket very often, but usually I don't have anything s______c to buy. I just like to look around.", src: 'L4 All in One 一、文意字彙', col: 'anything _____ to buy', mean: '特定的 (adj.)', trans: '我很常去超市，但通常沒有特定要買什麼東西，我只是喜歡到處看看。' },
+
+      // ==================== Lesson 5 (53 題) ====================
+      { id: 61, lesson: 'L5', word: 'plastic', ans: 'plastic', q: 'You should never put hot drinking water into p_____c bottles or cups.', src: 'L5 課本單字例句', col: 'into _____ bottles or cups', mean: '塑膠(製)的 (adj.)', trans: '你絕對不可以將熱開水放到塑膠瓶或塑膠杯裡。' },
+      { id: 62, lesson: 'L5', word: 'plastic', ans: 'plastic', q: 'In the old days, many toys were made of wood or metal, but now most of them are made of p_____c.', src: 'L5 課本衍生字例句', col: 'are made of _____', mean: '塑膠 (n.)', trans: '在以前，許多玩具都由木頭或金屬所製成，但是現在大部分玩具都是塑膠製的。' },
+      { id: 63, lesson: 'L5', word: 'plastic', ans: 'plastic', q: "That homeless man is poor and doesn't have a suitcase for his belongings, so he carries them in a p_____c bag.", src: 'L5 All in One 一、文意字彙', col: 'in a _____ bag', mean: '塑膠(製)的 (adj.)', trans: '那位無家可歸的人很窮，沒有行李箱裝家當，所以他用塑膠袋裝著它們。' },
+      { id: 64, lesson: 'L5', word: 'convenience', ans: 'convenience', q: 'Many shops post their business hours on their Facebook pages for the c_________e of the public.', src: 'L5 課本單字例句', col: 'for the _____ of the public', mean: '便利；方便 (n.)', trans: '為了大眾方便，許多商店會將它們的營業時間張貼在它們的臉書頁面上。' },
+      { id: 65, lesson: 'L5', word: 'convenience', ans: 'convenience', q: "I'd like to have a talk with you at your c_________e. When's the best time?", src: 'L5 All in One 一、文意字彙', col: 'at your _____ (在你方便時)', mean: '便利；方便 (n.)', trans: '我想在你方便的時候跟你談談。什麼時間最合適呢？' },
+      { id: 66, lesson: 'L5', word: 'eagerly', ans: 'eagerly', q: 'Rick is e_____y waiting for his boss to post the summer work schedule because he wants to plan his vacation.', src: 'L5 課本單字例句', col: 'is _____ waiting for...', mean: '渴望地；急切地 (adv.)', trans: 'Rick 渴望地等待他的老闆張貼夏季的工作時間表，因為他想要計畫他的假期。' },
+      { id: 67, lesson: 'L5', word: 'eager', ans: 'eager', q: 'After John sent the romantic email to his girlfriend, he was e___r for her reply.', src: 'L5 課本衍生字例句', col: 'was _____ for her reply', mean: '渴望的 (adj.)', trans: '在 John 寄出給他女朋友的浪漫電子郵件後，他渴望著她的回覆。' },
+      { id: 68, lesson: 'L5', word: 'eager', ans: 'eager', q: 'After the job interview, Joe was e___r to know if he would be hired as an engineer.', src: 'L5 All in One 二、詞類變化', col: 'was _____ to know', mean: '渴望的 (adj.)', trans: '在工作面試後，Joe 急切地想知道自己是否會被錄取為工程師。' },
+      { id: 69, lesson: 'L5', word: 'surround', ans: 'surrounded', q: 'The house is s______ded by tall trees, so nobody can see it from the road.', src: 'L5 課本單字例句', col: 'is _____ by tall trees (被動)', mean: '圍繞；環繞 (vt.)', trans: '那棟房子被高聳的樹所圍繞，所以沒有人能從馬路上看到它。' },
+      { id: 70, lesson: 'L5', word: 'surroundings', ans: 'surroundings', q: 'The hotel is in beautiful natural s__________s far away from the city.', src: 'L5 課本衍生字例句', col: 'in beautiful natural _____', mean: '周遭環境 (n. pl.)', trans: '這間旅館位在遠離城市的美麗自然環境中。' },
+      { id: 71, lesson: 'L5', word: 'surroundings', ans: 'surroundings', q: 'When you live in a foreign country, you have to spend a lot of time getting used to your new s__________s.', src: 'L5 All in One 二、詞類變化', col: 'getting used to your new _____', mean: '周遭環境 (n. pl.)', trans: '當你住在異國時，必須花很多時間適應你的新環境。' },
+      { id: 72, lesson: 'L5', word: 'drift', ans: 'drifted', q: 'After the captain fell asleep, the ship passed the harbor and then d___ted toward the middle of the sea.', src: 'L5 課本單字例句', col: '_____ toward the middle of the sea (過去式)', mean: '漂流 (vi.)', trans: '在船長睡著之後，這艘船越過港口接著漂向海中央。' },
+      { id: 73, lesson: 'L5', word: 'envy', ans: 'envies', q: 'Christopher really e__ies his best friend, Patty, because she has been to so many countries.', src: 'L5 課本單字例句', col: 'Christopher really _____ his best friend (三單)', mean: '羨慕 (vt.)', trans: 'Christopher 真的很羨慕他最好的朋友 Patty，因為她已經去過非常多國家。' },
+      { id: 74, lesson: 'L5', word: 'envy', ans: 'envy', q: "Kyle looked with e__y at his friend's smartphone since it was much newer and better than his.", src: 'L5 課本衍生字例句', col: 'looked with _____ at...', mean: '羨慕 (n.)', trans: 'Kyle 羨慕地看著他朋友的智慧型手機，因為比他的手機更新更好。' },
+      { id: 75, lesson: 'L5', word: 'envy', ans: 'envy', q: 'It is useless to e__y other people for their success and good fortune. Instead, you should make more of an effort to succeed.', src: 'L5 All in One 一、文意字彙', col: 'useless to _____ other people for...', mean: '羨慕 (vt.)', trans: '羨慕別人的成功與好運是沒有用的。相反地，你應該更加努力以獲得成功。' },
+      { id: 76, lesson: 'L5', word: 'crowded', ans: 'crowded', q: 'The Smith family is moving into a new house tomorrow, so their living room is c_____d with boxes.', src: 'L5 課本單字例句', col: 'is _____ with boxes', mean: '擠滿的；擁擠的 (adj.)', trans: 'Smith 一家人將在明天搬入新家，所以他們的客廳擠滿了箱子。' },
+      { id: 77, lesson: 'L5', word: 'crowded', ans: 'crowded', q: 'Stephanie made her way across the c_____d room to where her friend was standing.', src: 'L5 All in One 一、文意字彙', col: 'across the _____ room', mean: '擁擠的 (adj.)', trans: 'Stephanie 穿過擁擠的房間走到她朋友站著的地方。' },
+      { id: 78, lesson: 'L5', word: 'crowd', ans: 'crowd', q: 'The singer performed her three newest songs in front of a c___d of excited fans.', src: 'L5 課本衍生字例句', col: 'in front of a _____ of excited fans', mean: '人群；觀眾 (n.)', trans: '這位歌手在一群興奮的歌迷面前表演三首她最新的歌曲。' },
+      { id: 79, lesson: 'L5', word: 'obviously', ans: 'obviously', q: 'The little girl is wearing yellow shoes, a yellow dress, and has painted her nails yellow. O_______y, she likes this color.', src: 'L5 課本單字例句', col: '_____, she likes this color.', mean: '顯然地 (adv.)', trans: '這個小女孩正穿著黃色的鞋子跟黃色的洋裝，而且還把她的指甲塗成黃色。顯然她喜歡這個顏色。' },
+      { id: 80, lesson: 'L5', word: 'obviously', ans: 'obviously', q: "O_______y Helen's boss didn't like her ideas, for he walked out of the meeting room after only a few minutes.", src: 'L5 All in One 一、文意字彙', col: "_____ Helen's boss didn't like...", mean: '顯然地 (adv.)', trans: '顯然 Helen 的老闆不喜歡她的點子，因為他只過了幾分鐘就走出會議室。' },
+      { id: 81, lesson: 'L5', word: 'obvious', ans: 'obvious', q: "It was quite o_____s to Carrie's friends that she was in love with Mike because she couldn't stop talking about him.", src: 'L5 課本衍生字例句', col: "It was quite _____ to Carrie's friends", mean: '明顯的 (adj.)', trans: 'Carrie 愛上 Mike 這件事對她的朋友來說是相當明顯的，因為她總是談論到他。' },
+      { id: 82, lesson: 'L5', word: 'product', ans: 'products', q: 'This shop sells a variety of health and food p_____ts for babies.', src: 'L5 課本單字例句', col: 'health and food _____ for babies (複數)', mean: '產品 (n.)', trans: '這家商店販售各式各樣的嬰兒專用的健康產品和食品。' },
+      { id: 83, lesson: 'L5', word: 'product', ans: 'products', q: 'This company plans to invest a huge amount of money in the production of computer p_____ts.', src: 'L5 All in One 一、文意字彙', col: 'production of computer _____ (複數)', mean: '產品 (n.)', trans: '這家公司計畫投入巨資生產電腦產品。' },
+      { id: 84, lesson: 'L5', word: 'produce', ans: 'produces', q: 'This company p_____ces more computers than any other company in the world.', src: 'L5 課本衍生字例句', col: 'This company _____ more computers (三單)', mean: '製造；生產 (vt.)', trans: '這家公司比世界上任何其他公司所製造的電腦都還要多。' },
+      { id: 85, lesson: 'L5', word: 'production', ans: 'production', q: 'Taiwan is known for the p________n of high-quality bicycles like those that are made by Giant.', src: 'L5 課本衍生字例句', col: 'known for the _____ of high-quality bicycles', mean: '製造；生產 (n.)', trans: '臺灣以製造高品質腳踏車聞名，像是捷安特所製造的腳踏車。' },
+      { id: 86, lesson: 'L5', word: 'consume', ans: 'consume', q: 'Driving after you c_____e too much beer or wine can lead to a car crash.', src: 'L5 課本單字例句', col: 'after you _____ too much beer', mean: '吃；喝 (vt.)', trans: '飲用太多啤酒或葡萄酒後開車可能會造成車禍。' },
+      { id: 87, lesson: 'L5', word: 'consume', ans: 'consumes', q: "Finishing his assignments c_____mes most of Riley's free time in the evening and on the weekend.", src: 'L5 課本單字例句', col: "Finishing his assignments _____ most of... (三單)", mean: '消耗；耗費 (vt.)', trans: '完成作業耗掉 Riley 大部分傍晚和週末的空閒時間。' },
+      { id: 88, lesson: 'L5', word: 'consume', ans: 'consume', q: "If you c_____e enough fruit and vegetables, you'll become healthier.", src: 'L5 All in One 一、文意字彙', col: 'If you _____ enough fruit and vegetables', mean: '吃；攝取 (vt.)', trans: '如果你攝取足夠的蔬果，你就會變得更健康。' },
+      { id: 89, lesson: 'L5', word: 'consumer', ans: 'consumer', q: 'The study found that our city is the largest c______r of water in the country.', src: 'L5 課本衍生字例句', col: 'the largest _____ of water', mean: '消費者；消耗者 (n.)', trans: '這份研究發現我們的城市是國內耗水量最大的城市。' },
+      { id: 90, lesson: 'L5', word: 'poisonous', ans: 'poisonous', q: 'Chocolate is delicious for most people, but did you know that it can be p_______s to dogs?', src: 'L5 課本單字例句', col: 'can be _____ to dogs', mean: '有毒的 (adj.)', trans: '巧克力對大部分的人來說很美味，但是你知道對狗來說它可能是有毒的嗎？' },
+      { id: 91, lesson: 'L5', word: 'poisonous', ans: 'poisonous', q: "P_______s materials should always be kept in a locked cabinet, so that children can't touch them.", src: 'L5 All in One 一、文意字彙', col: '_____ materials should always be kept...', mean: '有毒的 (adj.)', trans: '有毒物質應永遠保存在上鎖的櫃子裡，以免孩童觸碰。' },
+      { id: 92, lesson: 'L5', word: 'poison', ans: 'poison', q: "Andy tried to p____n the cockroaches in his apartment with a chemical he bought at the store, but it didn't work.", src: 'L5 課本衍生字例句', col: 'tried to _____ the cockroaches', mean: '毒害；毒死 (vt.)', trans: 'Andy 試著用他從商店買來的化學藥劑來毒死公寓裡的蟑螂，但沒有效。' },
+      { id: 93, lesson: 'L5', word: 'poison', ans: 'poisons', q: 'Nobody except for the scientists is allowed to enter the testing room because there are several deadly p____ns in there.', src: 'L5 課本衍生字例句', col: 'several deadly _____ in there (複數)', mean: '毒藥；毒素 (n.)', trans: '除了那些科學家以外，沒有人被允許進入試驗室，因為裡面有幾種致命的毒藥。' },
+      { id: 94, lesson: 'L5', word: 'poison', ans: 'poison', q: 'The rock star almost died after he took p____n by mistake; he thought it was a soft drink.', src: 'L5 課本衍生字例句', col: 'after he took _____ by mistake', mean: '毒藥 (n.)', trans: '那位搖滾歌手錯喝毒藥後差點喪命；他以為那是汽水。' },
+      { id: 95, lesson: 'L5', word: 'substance', ans: 'substance', q: 'The police found a chemical s_______e at the murder scene and are doing tests on it right now.', src: 'L5 課本單字例句', col: 'found a chemical _____', mean: '物質 (n.)', trans: '警方在謀殺現場發現一種化學物質，現在正在對它進行檢驗。' },
+      { id: 96, lesson: 'L5', word: 'substance', ans: 'substance', q: 'The police have taken the unknown s_______e to the lab so that scientists there can determine what it is.', src: 'L5 All in One 一、文意字彙', col: 'the unknown _____', mean: '物質 (n.)', trans: '警方已將該未知物質送往實驗室，好讓那裡的科學家鑑定它是什麼。' },
+      { id: 97, lesson: 'L5', word: 'recycling', ans: 'recycling', q: 'After the party, Nick took all the empty bottles out for r_______g.', src: 'L5 課本單字例句', col: 'took all the empty bottles out for _____', mean: '回收 (n.)', trans: '派對過後，Nick 把所有空瓶子拿到外面回收。' },
+      { id: 98, lesson: 'L5', word: 'recycle', ans: 'recycled', q: "Many people don't realize that about 75% of the waste they produce can be r_____led.", src: 'L5 課本衍生字例句', col: 'can be _____ (被動)', mean: '回收利用 (vt.)', trans: '許多人不了解他們製造的廢棄物約有百分之七十五可以被回收。' },
+      { id: 99, lesson: 'L5', word: 'recycle', ans: 'recycle', q: 'Fewer trees will be cut down if we r_____e more paper.', src: 'L5 All in One 二、詞類變化', col: 'if we _____ more paper', mean: '回收利用 (vt.)', trans: '如果我們回收更多紙張，就會有更少的樹木被砍伐。' },
+      { id: 100, lesson: 'L5', word: 'harm', ans: 'harm', q: 'The cleaners were careful not to do any h__m to the objects in the museum as they cleaned around them.', src: 'L5 課本單字例句', col: 'not to do any _____ to the objects', mean: '傷害；損害 (n.)', trans: '在清潔的時候，那些清潔工很小心避免損傷博物館裡的物品。' },
+      { id: 101, lesson: 'L5', word: 'harm', ans: 'harm', q: 'Rebecca put the puppy down carefully in order not to h__m it.', src: 'L5 課本衍生字例句', col: 'in order not to _____ it', mean: '傷害 (vt.)', trans: 'Rebecca 小心翼翼地將小狗放下以免傷害到牠。' },
+      { id: 102, lesson: 'L5', word: 'harmful', ans: 'harmful', q: 'Looking at the sun for too long is h_____l to your eyes.', src: 'L5 課本衍生字例句', col: 'is _____ to your eyes', mean: '有害的 (adj.)', trans: '直視太陽太久會對你的眼睛有害。' },
+      { id: 103, lesson: 'L5', word: 'harmful', ans: 'harmful', q: "This river contains a high level of h_____l chemicals. You'll get sick if you drink the water.", src: 'L5 All in One 二、詞類變化', col: 'a high level of _____ chemicals', mean: '有害的 (adj.)', trans: '這條河含有高濃度的有害化學物質。如果你喝了這水會生病。' },
+      { id: 104, lesson: 'L5', word: 'environment', ans: 'environment', q: "It is every person's responsibility to save the earth's natural e_________t for our sons and daughters.", src: 'L5 課本單字例句', col: "the earth's natural _____", mean: '自然環境 (n.)', trans: '為我們未來的子女拯救地球的自然環境是每一個人的責任。' },
+      { id: 105, lesson: 'L5', word: 'environment', ans: 'environment', q: 'All company owners should create a safe working e_________t for their employees.', src: 'L5 課本單字例句', col: 'create a safe working _____', mean: '環境 (n.)', trans: '所有企業主應該為他們的員工創造一個安全的工作環境。' },
+      { id: 106, lesson: 'L5', word: 'environment', ans: 'environment', q: 'E_________t plays a key role in the way humans develop and learn new things.', src: 'L5 課本單字例句', col: '_____ plays a key role in...', mean: '環境 (n.)', trans: '環境在人類如何發展及學習新事物上扮演一個關鍵的角色。' },
+      { id: 107, lesson: 'L5', word: 'environment', ans: 'environment', q: 'It is believed that a happy family provides a loving e_________t in which children feel safe and secure.', src: 'L5 All in One 一、文意字彙', col: 'provides a loving _____', mean: '環境 (n.)', trans: '人們相信幸福的家庭能提供充滿愛的環境，讓孩子感到安全無虞。' },
+      { id: 108, lesson: 'L5', word: 'environmental', ans: 'environmental', q: "The president's speech to the students will focus on e___________l problems such as shrinking forests and climate change.", src: 'L5 課本衍生字例句', col: 'focus on _____ problems', mean: '自然環境的 (adj.)', trans: '總統對那群學生的演講將會著重在像是逐漸縮減的森林和氣候變遷等環境問題。' },
+      { id: 109, lesson: 'L5', word: 'properly', ans: 'properly', q: "Marc didn't complete the assignment p______y, so the teacher asked him to do it again.", src: 'L5 課本單字例句', col: "didn't complete the assignment _____", mean: '適當地；妥善地 (adv.)', trans: 'Marc 沒有好好地完成作業，所以老師要求他重做。' },
+      { id: 110, lesson: 'L5', word: 'proper', ans: 'proper', q: 'Silly jokes should only be told at the p____r place and time.', src: 'L5 課本衍生字例句', col: 'at the _____ place and time', mean: '適當的 (adj.)', trans: '愚蠢的笑話應該在適當的地點跟時間才能說。' },
+      { id: 111, lesson: 'L5', word: 'proper', ans: 'proper', q: "Steve wondered whether it would be p____r to knock at Ann's door late at night.", src: 'L5 All in One 二、詞類變化', col: 'whether it would be _____ to knock...', mean: '適當的；得體的 (adj.)', trans: 'Steve 不確定深夜敲 Ann 的房門是否妥當。' },
+
+      // ==================== Lesson 6 (48 題) ====================
+      { id: 112, lesson: 'L6', word: 'freedom', ans: 'freedom', q: 'After Simon turned eighteen, his parents gave him the f_____m to watch any movies he wanted to.', src: 'L6 課本單字例句', col: 'gave him the _____ to watch...', mean: '自由 (n.)', trans: 'Simon 滿十八歲之後，他的父母讓他自由看任何他想看的電影。' },
+      { id: 113, lesson: 'L6', word: 'freedom', ans: 'freedom', q: 'Some people dislike zoos and argue that wild animals should have more f_____m.', src: 'L6 All in One 一、文意字彙', col: 'should have more _____', mean: '自由 (n.)', trans: '有些人不喜歡動物園，並主張野生動物應該擁有更多自由。' },
+      { id: 114, lesson: 'L6', word: 'statue', ans: 'statue', q: 'The island of Hainan in China has a 108-meter s____e of the goddess Kuanyin.', src: 'L6 課本單字例句', col: 'a 108-meter _____ of the goddess', mean: '雕像 (n.)', trans: '中國的海南島有一座 108 公尺高的觀音雕像。' },
+      { id: 115, lesson: 'L6', word: 'statue', ans: 'statue', q: 'The wax s____e at the museum looks so real that it seems as if the actual person were standing there in front of you.', src: 'L6 All in One 一、文意字彙', col: 'The wax _____ at the museum', mean: '雕像；塑像 (n.)', trans: '博物館裡的蠟像看起來如此逼真，彷彿真人就站在你面前。' },
+      { id: 116, lesson: 'L6', word: 'remove', ans: 'remove', q: 'Jasmine chewed gum to r____e the smell of garlic from her breath.', src: 'L6 課本單字例句', col: 'to _____ the smell of garlic from...', mean: '移除；去除 (vt.)', trans: 'Jasmine 嚼口香糖來去除她口氣中的蒜味。' },
+      { id: 117, lesson: 'L6', word: 'remove', ans: 'remove', q: 'Before you enter the house, please wipe your feet on the mat to r____e any dirt from your shoes.', src: 'L6 All in One 一、文意字彙', col: 'to _____ any dirt from your shoes', mean: '移除；去除 (vt.)', trans: '進屋前請在踏墊上擦乾雙腳，以去除鞋子上的汙垢。' },
+      { id: 118, lesson: 'L6', word: 'celebration', ans: 'celebration', q: 'Yvonne invited her friends out for dinner in c_________n of finishing all of their exams.', src: 'L6 課本單字例句', col: 'in _____ of finishing all of their exams', mean: '慶祝 (n.)', trans: 'Yvonne 邀請她的朋友外出吃晚餐，慶祝他們完成所有的考試。' },
+      { id: 119, lesson: 'L6', word: 'celebration', ans: 'celebration', q: "Every October 10 our country holds a national c_________n to remember an important event in our country's history.", src: 'L6 課本單字例句', col: 'holds a national _____', mean: '慶祝活動；慶典 (n.)', trans: '每年十月十日，我國都會舉辦國慶活動來紀念我國歷史上一個重要的事件。' },
+      { id: 120, lesson: 'L6', word: 'celebration', ans: 'celebration', q: "We'll have a big family c_________n next Friday night for my father's 70th birthday.", src: 'L6 All in One 一、文意字彙', col: 'have a big family _____', mean: '慶祝活動 (n.)', trans: '下週五晚上我們將為我父親的七十歲大壽舉辦盛大的家庭慶祝活動。' },
+      { id: 121, lesson: 'L6', word: 'celebrate', ans: 'celebrated', q: 'The whole country c______ted when their team won the FIFA World Cup for the first time.', src: 'L6 課本衍生字例句', col: 'The whole country _____ when... (過去式)', mean: '慶祝 (vi.)', trans: '全國慶祝國家隊第一次贏得世界盃足球賽冠軍。' },
+      { id: 122, lesson: 'L6', word: 'celebrate', ans: 'celebrate', q: "The couple gave sticky rice and red eggs to their friends and family members to c_______e their son's one-month birthday.", src: 'L6 課本衍生字例句', col: "to _____ their son's one-month birthday", mean: '慶祝 (vt.)', trans: '這對夫妻送他們的親朋好友油飯和紅蛋來慶祝他們的兒子滿月。' },
+      { id: 123, lesson: 'L6', word: 'independence', ans: 'independence', q: 'India achieved i__________e from the United Kingdom on August 15, 1947.', src: 'L6 課本單字例句', col: 'achieved _____ from the UK', mean: '獨立 (n.)', trans: '印度在 1947 年 8 月 15 日脫離英國完成獨立。' },
+      { id: 124, lesson: 'L6', word: 'independence', ans: 'independence', q: 'As children mature, they often try to gain more i__________e from their parents.', src: 'L6 All in One 一、文意字彙', col: 'gain more _____ from their parents', mean: '獨立；自主 (n.)', trans: '隨著孩子日漸成熟，他們通常會試著從父母身邊爭取更多獨立自主。' },
+      { id: 125, lesson: 'L6', word: 'independent', ans: 'independent', q: 'The Philippines has been i_________t from Spain for over 100 years, but about 3 million people there still speak Spanish.', src: 'L6 課本衍生字例句', col: 'has been _____ from Spain', mean: '獨立的 (adj.)', trans: '菲律賓已經脫離西班牙獨立超過一百年了，但那裡大約有三百萬人仍然說西班牙語。' },
+      { id: 126, lesson: 'L6', word: 'monument', ans: 'monuments', q: "The Taiwan Salt Museum and Qigu Salt Mountain in Tainan are m______ts to Taiwan's salt producing past.", src: 'L6 課本單字例句', col: "are _____ to Taiwan's salt producing past (複數)", mean: '紀念碑；歷史見證 (n.)', trans: '在臺南的臺灣鹽博物館及七股鹽山是臺灣過去產鹽的見證。' },
+      { id: 127, lesson: 'L6', word: 'monument', ans: 'monument', q: "This m______t in the city square was built in memory of our country's heroes.", src: 'L6 All in One 一、文意字彙', col: 'This _____ in the city square', mean: '紀念碑 (n.)', trans: '城市廣場上的這座紀念碑是為了紀念我國英雄而建的。' },
+      { id: 128, lesson: 'L6', word: 'symbolize', ans: 'symbolizes', q: "In Beauty and the Beast, the dying rose s______zes the Beast's chance of becoming human again.", src: 'L6 課本單字例句', col: "the dying rose _____ the Beast's chance (三單)", mean: '象徵；代表 (vt.)', trans: '在《美女與野獸》當中，逐漸凋謝的玫瑰象徵野獸再次變成人類的機會。' },
+      { id: 129, lesson: 'L6', word: 'symbol', ans: 'symbol', q: 'In many cultures, the dove is regarded as a s____l of peace.', src: 'L6 課本衍生字例句', col: 'regarded as a _____ of peace', mean: '象徵 (n.)', trans: '在許多文化中，鴿子被認為是和平的象徵。' },
+      { id: 130, lesson: 'L6', word: 'symbolic', ans: 'symbolic', q: "The fifty stars on the American flag are s______c of the country's fifty states.", src: 'L6 課本衍生字例句', col: "are _____ of the country's fifty states", mean: '作為象徵的；象徵性的 (adj.)', trans: '在美國國旗上的五十顆星星象徵這個國家的五十個州。' },
+      { id: 131, lesson: 'L6', word: 'symbolic', ans: 'symbolic', q: 'I cherish the card Jenny gave to me because it is s______c of our friendship.', src: 'L6 All in One 二、詞類變化', col: 'it is _____ of our friendship', mean: '作為象徵的 (adj.)', trans: '我珍惜 Jenny 送給我的卡片，因為它象徵我們的友誼。' },
+      { id: 132, lesson: 'L6', word: 'firmly', ans: 'firmly', q: "Jack f____y closed the lid of the jar so that it wouldn't open accidentally.", src: 'L6 課本單字例句', col: '_____ closed the lid of the jar', mean: '牢固地；堅定地 (adv.)', trans: 'Jack 牢牢關緊罐子的蓋子，以讓它不會意外打開。' },
+      { id: 133, lesson: 'L6', word: 'firm', ans: 'firm', q: 'The apples in the basket were all fresh, f__m, and perfect for making pie.', src: 'L6 課本衍生字例句', col: 'all fresh, _____, and perfect', mean: '堅硬的；結實的 (adj.)', trans: '這個籃子裡的蘋果都很新鮮、結實，而且適合做派。' },
+      { id: 134, lesson: 'L6', word: 'firm', ans: 'firm', q: "Eric's doctor suggested that he sleep on a f__m mattress to benefit his back.", src: 'L6 All in One 二、詞類變化', col: 'sleep on a _____ mattress', mean: '堅實的；硬挺的 (adj.)', trans: 'Eric 的醫生建議他睡硬床墊以對背部有益。' },
+      { id: 135, lesson: 'L6', word: 'represent', ans: 'represent', q: 'Sometimes Chinese speakers type "3Q" to r_______t the words "thank you" because "3Q" sounds like "thank you" in Chinese.', src: 'L6 課本單字例句', col: 'type "3Q" to _____ the words', mean: '代表；作為……的象徵 (vt.)', trans: '有時候說華語的人會打出「3Q」來代表「thank you」這些字，因為「3Q」的華語聽起來像「thank you」。' },
+      { id: 136, lesson: 'L6', word: 'represent', ans: 'represent', q: 'Roberto was chosen to r_______t his class in the school performance because he is a good actor.', src: 'L6 課本單字例句', col: 'chosen to _____ his class', mean: '代表 (vt.)', trans: 'Roberto 獲選代表他們班參加學校的表演，因為他是一個好演員。' },
+      { id: 137, lesson: 'L6', word: 'represent', ans: 'represents', q: 'White stands for purity in Western countries, but it r______ts death in China.', src: 'L6 All in One 一、文意字彙', col: 'it _____ death in China (三單)', mean: '代表；象徵 (vt.)', trans: '白色在西方國家代表純潔，但在中國卻代表死亡。' },
+      { id: 138, lesson: 'L6', word: 'representation', ans: 'representation', q: "Wendy didn't like the r____________n of women in the movie; all of them were shown as being quiet and weak.", src: 'L6 課本衍生字例句', col: 'the _____ of women in the movie', mean: '表現形式；描繪 (n.)', trans: 'Wendy 不喜歡這部電影中女性的表現方式；她們全部都被呈現為安靜柔弱的樣子。' },
+      { id: 139, lesson: 'L6', word: 'representation', ans: 'representation', q: 'The team created a small plastic r____________n of the tower they were planning to build.', src: 'L6 課本衍生字例句', col: 'a small plastic _____ of the tower', mean: '塑像；模型 (n.)', trans: '這個團隊為他們正計劃建造的塔樓製作了一個小塑膠模型。' },
+      { id: 140, lesson: 'L6', word: 'ancient', ans: 'ancient', q: "The Great Wall was built thousands of years ago to stop a_____t China's enemies from invading.", src: 'L6 課本單字例句', col: "stop _____ China's enemies", mean: '古代的；古老的 (adj.)', trans: '長城在數千年前被建造來阻擋古代中國敵人的侵略。' },
+      { id: 141, lesson: 'L6', word: 'ancient', ans: 'ancient', q: 'Before medicine was invented, a_____t people cured themselves with herbs, such as garlic and ginger.', src: 'L6 All in One 一、文意字彙', col: '_____ people cured themselves', mean: '古代的 (adj.)', trans: '在醫藥發明之前，古人用大蒜和生薑等草藥為自己治病。' },
+      { id: 142, lesson: 'L6', word: 'slavery', ans: 'slavery', q: 'This book is about a girl who was sold into s_____y and made to work on a farm for years.', src: 'L6 課本單字例句', col: 'was sold into _____', mean: '蓄奴制；奴隸身分 (n.)', trans: '這本書是關於一個被賣為奴隸，並被迫在農場上工作多年的女孩。' },
+      { id: 143, lesson: 'L6', word: 'slave', ans: 'slaves', q: 'When Abraham Lincoln ended slavery in the US, many of his friends still owned s___es.', src: 'L6 課本衍生字例句', col: 'still owned _____ (複數)', mean: '奴隸 (n.)', trans: '當亞伯拉罕．林肯結束了美國的奴隸制度時，他的許多朋友仍然擁有奴隸。' },
+      { id: 144, lesson: 'L6', word: 'slave', ans: 'slaves', q: 'Some s___es in the American South were treated well by their masters, but they were still not free people.', src: 'L6 All in One 二、詞類變化', col: 'Some _____ in the American South (複數)', mean: '奴隸 (n.)', trans: '美國南方的一些奴隸受到主人良好的對待，但他們依然不是自由人。' },
+      { id: 145, lesson: 'L6', word: 'unfair', ans: 'unfair', q: 'Several players cheated during the game, so everybody agrees that the final score is u____r.', src: 'L6 課本單字例句', col: 'the final score is _____', mean: '不公正的；不公平的 (adj.)', trans: '幾位球員在這場比賽中作弊，所以每個人都一致認為最後的分數是不公平的。' },
+      { id: 146, lesson: 'L6', word: 'treatment', ans: 'treatment', q: 'The prison was closed after many reports revealed the poor t_______t of prisoners there.', src: 'L6 課本單字例句', col: 'the poor _____ of prisoners', mean: '對待；待遇 (n.)', trans: '許多報告揭發了囚犯在那裡的惡劣待遇之後，這座監獄被關閉了。' },
+      { id: 147, lesson: 'L6', word: 'tourist', ans: 'tourist', q: 'Mary and John went into the t_____t center to ask for information about local hotels.', src: 'L6 課本單字例句', col: 'went into the _____ center', mean: '遊客；觀光客 (n.)', trans: 'Mary 和 John 到遊客中心去詢問關於當地飯店的資訊。' },
+      { id: 148, lesson: 'L6', word: 'tourist', ans: 'tourists', q: 'Many t_____ts visit Hawaii every year to enjoy the beaches and beautiful scenery.', src: 'L6 All in One 一、文意字彙', col: 'Many _____ visit Hawaii (複數)', mean: '遊客；觀光客 (n.)', trans: '每年有許多遊客造訪夏威夷，享受海灘與美麗風景。' },
+      { id: 149, lesson: 'L6', word: 'tourism', ans: 'tourism', q: "T_____m in the country grew sharply after it was chosen as this year's best place to visit by a popular magazine.", src: 'L6 課本衍生字例句', col: '_____ in the country grew sharply', mean: '旅遊業；觀光業 (n.)', trans: '這個國家被一本受歡迎的雜誌選為今年最佳旅遊地點後，旅遊業急速成長。' },
+      { id: 150, lesson: 'L6', word: 'attraction', ans: 'attractions', q: 'Beaches and water sports are the main a________ns in Kenting.', src: 'L6 課本單字例句', col: 'the main _____ in Kenting (複數)', mean: '有吸引力的事物或景點 (n.)', trans: '海灘和水上運動是墾丁最主要的賣點。' },
+      { id: 151, lesson: 'L6', word: 'attract', ans: 'attract', q: 'Famous sights such as the Eiffel Tower and Louvre Museum a_____t over 30 million tourists to Paris every year.', src: 'L6 課本衍生字例句', col: '_____ over 30 million tourists to Paris', mean: '招引；吸引 (vt.)', trans: '像艾菲爾鐵塔和羅浮宮博物館這類有名的景點，每年吸引了超過三千萬遊客到巴黎。' },
+      { id: 152, lesson: 'L6', word: 'attract', ans: 'attracted', q: 'What really a_____ted Trudy to the job was the paid vacations.', src: 'L6 All in One 二、詞類變化', col: 'What really _____ Trudy to the job (過去式)', mean: '吸引 (vt.)', trans: '真正吸引 Trudy 應徵這份工作的原因是有薪假期。' },
+      { id: 153, lesson: 'L6', word: 'attractive', ans: 'attractive', q: 'Modern buildings are not a________e to Britney because she thinks they are seldom unique.', src: 'L6 課本衍生字例句', col: 'are not _____ to Britney', mean: '吸引人的 (adj.)', trans: 'Britney 並不受現代建築吸引，因為她認為它們都不太獨特。' },
+      { id: 154, lesson: 'L6', word: 'landmark', ans: 'landmarks', q: "The Tokyo Tower and the Tokyo Skytree are two of Japan's most famous l______ks.", src: 'L6 課本單字例句', col: "two of Japan's most famous _____ (複數)", mean: '地標 (n.)', trans: '東京鐵塔和東京晴空塔是日本最有名地標中的兩個。' },
+      { id: 155, lesson: 'L6', word: 'landmark', ans: 'landmark', q: 'The Eiffel Tower was built in 1889. Now, it is a famous l______k in Paris.', src: 'L6 All in One 一、文意字彙', col: 'a famous _____ in Paris', mean: '地標 (n.)', trans: '艾菲爾鐵塔建於 1889 年，現在是巴黎著名的地標。' },
+      { id: 156, lesson: 'L6', word: 'globe', ans: 'globe', q: "Many of David Bowie's fans around the g___e posted images or words on Facebook and Instagram in memory of him after he died on January 10, 2016.", src: 'L6 課本單字例句', col: 'around the _____ (全世界)', mean: '地球；世界 (n.)', trans: '大衛鮑伊在 2016 年 1 月 10 日去世後，全世界許多他的粉絲在臉書和 Instagram 上傳圖文紀念他。' },
+      { id: 157, lesson: 'L6', word: 'global', ans: 'global', q: 'Many people believe that g____l warming is causing a higher number of large storms such as typhoons.', src: 'L6 課本衍生字例句', col: 'believe that _____ warming is causing...', mean: '全球的；全世界的 (adj.)', trans: '許多人相信全球暖化正造成更多像颱風這樣的大型風暴。' },
+      { id: 158, lesson: 'L6', word: 'global', ans: 'global', q: 'The problem of g____l warming is getting worse, and it may threaten our living environment.', src: 'L6 All in One 二、詞類變化', col: 'The problem of _____ warming', mean: '全球的 (adj.)', trans: '全球暖化的問題正日益惡化，且可能威脅我們的生活環境。' },
+      { id: 159, lesson: 'L5', word: 'environment', ans: 'environment', q: 'It is everyone’s duty to protect our e_________t from pollution.', src: 'L5 Listening Preview', col: 'protect our _____ from pollution', mean: '自然環境 (n.)', trans: '保護我們的環境免於汙染是每個人的責任。' },
+      { id: 160, lesson: 'L5', word: 'plastic', ans: 'plastic', q: 'We should bring our own p_____c bags when shopping.', src: 'L5 Listening Preview', col: 'bring our own _____ bags', mean: '塑膠(製)的 (adj.)', trans: '我們購物時應該自備塑膠袋。' },
+      { id: 161, lesson: 'L6', word: 'tourist', ans: 'tourist', q: 'Today, the Statue of Liberty is one of America’s biggest t_____t attractions.', src: 'L6 課文例句', col: 'biggest _____ attractions', mean: '遊客；觀光 (n.)', trans: '今日，自由女神像是美國最大的觀光勝地之一。' }
+    ];
+
+    // 狀態管理與學生登入資訊
+    let currentFilter = 'ALL';
+    let activeDeck = [];
+    let currentIndex = 0;
+    let streak = 0;
+    let totalAnswered = 0;
+    let totalCorrect = 0;
+    let isChecked = false;
+    let mistakes = [];
+    let currentQuestionHintUsed = { col: false, mean: false };
+
+    let studentUser = {
+      classNum: '',
+      seatNum: '',
+      name: '',
+      isLoggedIn: false
+    };
+
+    // DOM 元素
+    const answerInput = document.getElementById('answer-input');
+    const typedLength = document.getElementById('typed-length-indicator');
+    const clearBtn = document.getElementById('btn-clear-input');
+    const submitBtn = document.getElementById('btn-submit');
+    const submitBtnText = document.getElementById('btn-submit-text');
+    const submitBtnIcon = document.getElementById('btn-submit-icon');
+    const skipBtn = document.getElementById('btn-skip');
+    const feedbackCorrect = document.getElementById('feedback-correct');
+    const feedbackWrong = document.getElementById('feedback-wrong');
+    const mistakeBadge = document.getElementById('mistake-count-badge');
+    const chipMistakeCount = document.getElementById('chip-mistake-count');
+    const mistakeModalCount = document.getElementById('mistake-modal-count');
+    const mistakeListContainer = document.getElementById('mistake-list-container');
+
+    // 洗牌函數
+    function shuffleArray(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    // 根據篩選條件建立題庫佇列
+    function buildDeck(filterType) {
+      currentFilter = filterType;
+      updateFilterChipStyles();
+
+      if (filterType === 'ALL') {
+        activeDeck = shuffleArray(QUESTION_BANK);
+      } else if (filterType === 'MISTAKE') {
+        activeDeck = mistakes.length === 0 ? [] : shuffleArray(mistakes);
+      } else {
+        activeDeck = QUESTION_BANK.filter(item => item.lesson === filterType);
+      }
+
+      currentIndex = 0;
+      renderCurrentQuestion();
+    }
+
+    // 更新上方課次按鈕高亮狀態
+    function updateFilterChipStyles() {
+      document.querySelectorAll('.filter-chip').forEach(btn => {
+        const filter = btn.getAttribute('data-filter');
+        if (filter === currentFilter) {
+          btn.className = 'filter-chip btn-pop shrink-0 bg-dopamine-yellow text-dopamine-dark font-black text-base px-4 py-2 rounded-2xl border-2 border-dopamine-dark shadow-pop-sm';
+        } else if (filter === 'MISTAKE') {
+          btn.className = 'filter-chip btn-pop shrink-0 bg-purple-100 text-dopamine-dark font-extrabold text-base px-4 py-2 rounded-2xl border-2 border-dopamine-dark shadow-pop-sm hover:bg-purple-200';
+        } else {
+          btn.className = 'filter-chip btn-pop shrink-0 bg-white text-dopamine-dark font-bold text-base px-4 py-2 rounded-2xl border-2 border-dopamine-dark shadow-pop-sm hover:bg-slate-50';
+        }
+      });
+    }
+
+    // 將題目中的挖空字串轉為醒目的膠囊標籤
+    function formatQuestionHTML(rawSentence) {
+      return rawSentence.replace(/([A-Za-z-]+_[A-Za-z_]*)/g, (match) => {
+        return `<span class="inline-block bg-white px-2.5 py-0.5 rounded-xl border-2 border-dopamine-dark text-dopamine-blue font-black tracking-widest mx-1">${match}</span>`;
+      });
+    }
+
+    // 渲染當前題目
+    function renderCurrentQuestion() {
+      isChecked = false;
+      currentQuestionHintUsed = { col: false, mean: false };
+      feedbackCorrect.classList.add('hidden');
+      feedbackWrong.classList.add('hidden');
+      document.getElementById('collocation-hint-box').classList.add('hidden');
+      document.getElementById('meaning-hint-box').classList.add('hidden');
+
+      submitBtn.className = 'btn-pop col-span-2 bg-dopamine-mint text-dopamine-dark font-black text-lg sm:text-xl py-4 rounded-2xl border-2 border-dopamine-dark shadow-pop flex items-center justify-center gap-2';
+      submitBtnText.textContent = '送出答案';
+      submitBtnIcon.className = 'fa-solid fa-paper-plane';
+
+      if (activeDeck.length === 0) {
+        document.getElementById('source-badge-text').textContent = '錯題本是空的 🎉';
+        document.getElementById('question-text').innerHTML = '目前沒有任何錯題喔！請點選上方「全部隨機」或各課按鈕繼續練習 💪';
+        document.getElementById('letter-clue-text').textContent = '';
+        document.getElementById('progress-current').textContent = '0';
+        document.getElementById('progress-total').textContent = '0';
+        document.getElementById('progress-bar').style.width = '0%';
+        answerInput.value = '';
+        answerInput.disabled = true;
+        return;
+      }
+
+      answerInput.disabled = false;
+      const item = activeDeck[currentIndex];
+
+      document.getElementById('progress-current').textContent = currentIndex + 1;
+      document.getElementById('progress-total').textContent = activeDeck.length;
+      const pct = Math.max(2, Math.round(((currentIndex + 1) / activeDeck.length) * 100));
+      document.getElementById('progress-bar').style.width = `${pct}%`;
+
+      document.getElementById('source-badge-text').textContent = item.src;
+      document.getElementById('question-text').innerHTML = formatQuestionHTML(item.q);
+      document.getElementById('collocation-hint-text').textContent = item.col;
+      document.getElementById('meaning-hint-text').textContent = `${item.mean}`;
+
+      const targetAns = item.ans;
+      const firstChar = targetAns[0];
+      const lastChar = targetAns[targetAns.length - 1];
+      document.getElementById('letter-clue-text').innerHTML =
+        `提示：字首 <strong class="text-dopamine-dark">${firstChar}</strong>、字尾 <strong class="text-dopamine-dark">${lastChar}</strong>（共 ${targetAns.length} 個字母）`;
+
+      answerInput.value = '';
+      typedLength.textContent = '已輸入：0 字';
+      answerInput.focus();
+    }
+
+    // 切換至下一題
+    function goToNextQuestion() {
+      if (activeDeck.length === 0) return;
+      currentIndex = (currentIndex + 1) % activeDeck.length;
+      renderCurrentQuestion();
+    }
+
+    // 送出答案檢核 或 進入下一題
+    function handleSubmitOrNext() {
+      if (activeDeck.length === 0) return;
+
+      if (isChecked) {
+        goToNextQuestion();
+        return;
+      }
+
+      const userVal = answerInput.value.trim();
+      if (!userVal) {
+        answerInput.focus();
+        return;
+      }
+
+      const item = activeDeck[currentIndex];
+      isChecked = true;
+
+      feedbackCorrect.classList.add('hidden');
+      feedbackWrong.classList.add('hidden');
+
+      const isCorrect =
+        userVal.toLowerCase() === item.ans.toLowerCase() ||
+        userVal.toLowerCase() === item.word.toLowerCase();
+
+      totalAnswered += 1;
+
+      if (isCorrect) {
+        totalCorrect += 1;
+        streak += 1;
+        document.getElementById('streak-count').textContent = streak;
+        document.getElementById('correct-ans-display').textContent = item.ans;
+        document.getElementById('correct-translation-text').textContent = item.trans;
+        feedbackCorrect.classList.remove('hidden');
+
+        // 如果在錯題模式答對，可減少錯題計數或保留練習
+      } else {
+        streak = 0;
+        document.getElementById('streak-count').textContent = '0';
+        document.getElementById('user-wrong-input').textContent = userVal;
+        document.getElementById('wrong-correct-ans').textContent = item.ans;
+        document.getElementById('wrong-translation-text').textContent = item.trans;
+        feedbackWrong.classList.remove('hidden');
+
+        const existing = mistakes.find(m => m.id === item.id);
+        if (existing) {
+          existing.count += 1;
+        } else {
+          mistakes.push({ ...item, count: 1 });
+        }
+        renderMistakeList();
+      }
+
+      updateStatsModalUI();
+
+      // 非同步傳送單題作答紀錄與彙整統計至 Google Apps Script 後台
+      sendRecordToGAS({
+        action: 'logAnswer',
+        classNum: studentUser.classNum,
+        seatNum: studentUser.seatNum,
+        studentName: studentUser.name,
+        questionId: item.id,
+        lesson: item.lesson,
+        source: item.src,
+        targetWord: item.ans,
+        userInput: userVal,
+        isCorrect: isCorrect,
+        usedCollocationHint: currentQuestionHintUsed.col,
+        usedMeaningHint: currentQuestionHintUsed.mean,
+        totalAnswered: totalAnswered,
+        totalCorrect: totalCorrect,
+        streak: streak,
+        mistakeWords: mistakes.map(m => `${m.ans}(${m.count})`).join(', ')
+      });
+
+      submitBtn.className = 'btn-pop col-span-2 bg-dopamine-yellow text-dopamine-dark font-black text-lg sm:text-xl py-4 rounded-2xl border-2 border-dopamine-dark shadow-pop flex items-center justify-center gap-2';
+      submitBtnText.textContent = '下一題';
+      submitBtnIcon.className = 'fa-solid fa-arrow-right';
+    }
+
+    // 更新彈窗內的統計數據
+    function updateStatsModalUI() {
+      const elAns = document.getElementById('stat-total-answered');
+      const elCor = document.getElementById('stat-total-correct');
+      if (elAns) elAns.textContent = totalAnswered;
+      if (elCor) elCor.textContent = totalCorrect;
+    }
+
+    // 傳送資料到 GAS 後台 (使用 text/plain 避免 GitHub Pages 跨域 CORS 預檢失敗)
+    async function sendRecordToGAS(payload) {
+      const syncIcon = document.getElementById('sync-status-icon');
+      const syncLabel = document.getElementById('stat-sync-label');
+
+      if (!studentUser.isLoggedIn) {
+        if (syncLabel) syncLabel.textContent = '請先登入以同步';
+        return;
+      }
+
+      if (!GAS_WEB_APP_URL || GAS_WEB_APP_URL.includes('請替換')) {
+        if (syncLabel) syncLabel.textContent = '尚未設定 GAS 網址';
+        return;
+      }
+
+      try {
+        if (syncIcon) syncIcon.className = 'fa-solid fa-rotate fa-spin';
+        if (syncLabel) syncLabel.textContent = '雲端同步中...';
+
+        await fetch(GAS_WEB_APP_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'text/plain;charset=utf-8'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (syncIcon) syncIcon.className = 'fa-solid fa-cloud-arrow-up text-emerald-200';
+        if (syncLabel) syncLabel.textContent = '✅ 已同步至雲端';
+      } catch (err) {
+        if (syncIcon) syncIcon.className = 'fa-solid fa-triangle-exclamation text-amber-200';
+        if (syncLabel) syncLabel.textContent = '⚠️ 同步失敗';
+      }
+    }
+
+    // 渲染錯題本清單
+    function renderMistakeList() {
+      if (mistakeBadge) mistakeBadge.textContent = mistakes.length;
+      if (chipMistakeCount) chipMistakeCount.textContent = mistakes.length;
+      if (mistakeModalCount) mistakeModalCount.textContent = mistakes.length;
+
+      if (!mistakeListContainer) return;
+
+      if (mistakes.length === 0) {
+        mistakeListContainer.innerHTML = `<p class="text-center text-slate-500 font-bold py-8">目前還沒有錯題喔！繼續保持 💪</p>`;
+        return;
+      }
+
+      mistakeListContainer.innerHTML = mistakes.map((item, idx) => `
+        <div class="bg-white p-3.5 rounded-2xl border-2 border-dopamine-dark flex items-center justify-between gap-2">
+          <div>
+            <span class="text-xs font-extrabold text-dopamine-purple">${item.src}</span>
+            <p class="text-lg font-black text-dopamine-dark">${item.ans} <span class="text-sm font-bold text-slate-600">${item.mean}</span></p>
+            <p class="text-xs font-bold text-slate-500 line-clamp-1">${item.trans}</p>
+            <p class="text-xs font-bold text-rose-600 mt-0.5">錯誤次數：${item.count} 次</p>
+          </div>
+          <button type="button" data-mistake-idx="${idx}" class="btn-practice-single btn-pop shrink-0 bg-dopamine-yellow text-xs font-black px-3 py-2 rounded-xl border-2 border-dopamine-dark">
+            單獨重練
+          </button>
+        </div>
+      `).join('');
+
+      document.querySelectorAll('.btn-practice-single').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const mIdx = parseInt(btn.getAttribute('data-mistake-idx'), 10);
+          activeDeck = [...mistakes];
+          currentFilter = 'MISTAKE';
+          updateFilterChipStyles();
+          currentIndex = mIdx;
+          document.getElementById('mistake-modal')?.classList.add('hidden');
+          renderCurrentQuestion();
+        });
+      });
+    }
+
+    // 安全事件綁定輔助函數
+    function safeOn(id, event, handler) {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener(event, handler);
+    }
+
+    answerInput.addEventListener('input', () => {
+      typedLength.textContent = `已輸入：${answerInput.value.trim().length} 字`;
+    });
+
+    clearBtn.addEventListener('click', () => {
+      answerInput.value = '';
+      typedLength.textContent = '已輸入：0 字';
+      answerInput.focus();
+    });
+
+    safeOn('btn-hint-collocation', 'click', () => {
+      currentQuestionHintUsed.col = true;
+      document.getElementById('collocation-hint-box')?.classList.remove('hidden');
+    });
+
+    safeOn('btn-hint-meaning', 'click', () => {
+      currentQuestionHintUsed.mean = true;
+      document.getElementById('meaning-hint-box')?.classList.remove('hidden');
+    });
+
+    submitBtn.addEventListener('click', handleSubmitOrNext);
+    skipBtn.addEventListener('click', goToNextQuestion);
+
+    answerInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handleSubmitOrNext();
+      }
+    });
+
+    document.querySelectorAll('.filter-chip').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const filterType = btn.getAttribute('data-filter');
+        buildDeck(filterType);
+      });
+    });
+
+    safeOn('btn-mistake-drawer', 'click', () => {
+      document.getElementById('mistake-modal')?.classList.remove('hidden');
+    });
+    safeOn('btn-close-mistake', 'click', () => {
+      document.getElementById('mistake-modal')?.classList.add('hidden');
+    });
+    safeOn('btn-start-mistake-drill', 'click', () => {
+      document.getElementById('mistake-modal')?.classList.add('hidden');
+      buildDeck('MISTAKE');
+    });
+    safeOn('btn-user-profile', 'click', () => {
+      document.getElementById('login-modal')?.classList.remove('hidden');
+    });
+    safeOn('btn-close-login', 'click', () => {
+      document.getElementById('login-modal')?.classList.add('hidden');
+    });
+
+    // 處理學生登入
+    safeOn('btn-confirm-login', 'click', () => {
+      const cNum = document.getElementById('login-class')?.value.trim();
+      const sNum = document.getElementById('login-seat')?.value.trim();
+      const sName = document.getElementById('login-student-name')?.value.trim();
+      const errMsg = document.getElementById('login-error-msg');
+
+      if (!cNum || !sNum || !sName) {
+        errMsg?.classList.remove('hidden');
+        return;
+      }
+
+      errMsg?.classList.add('hidden');
+      studentUser = {
+        classNum: cNum,
+        seatNum: sNum.padStart(2, '0'),
+        name: sName,
+        isLoggedIn: true
+      };
+
+      document.getElementById('user-status-text').textContent = `${studentUser.classNum}-${studentUser.seatNum} ${studentUser.name}`;
+      document.getElementById('sync-status-icon').className = 'fa-solid fa-circle-check text-emerald-200';
+      document.getElementById('login-modal')?.classList.add('hidden');
+
+      // 登入時先發送一筆登入打卡紀錄至 GAS
+      sendRecordToGAS({
+        action: 'login',
+        classNum: studentUser.classNum,
+        seatNum: studentUser.seatNum,
+        studentName: studentUser.name,
+        totalAnswered: totalAnswered,
+        totalCorrect: totalCorrect,
+        streak: streak,
+        mistakeWords: mistakes.map(m => `${m.ans}(${m.count})`).join(', ')
+      });
+
+      answerInput.focus();
+    });
+
+    // 手動立即上傳成績摘要
+    safeOn('btn-manual-sync', 'click', () => {
+      const cNum = document.getElementById('login-class')?.value.trim();
+      const sNum = document.getElementById('login-seat')?.value.trim();
+      const sName = document.getElementById('login-student-name')?.value.trim();
+      const errMsg = document.getElementById('login-error-msg');
+
+      if (!cNum || !sNum || !sName) {
+        errMsg?.classList.remove('hidden');
+        return;
+      }
+
+      errMsg?.classList.add('hidden');
+      studentUser = {
+        classNum: cNum,
+        seatNum: sNum.padStart(2, '0'),
+        name: sName,
+        isLoggedIn: true
+      };
+      document.getElementById('user-status-text').textContent = `${studentUser.classNum}-${studentUser.seatNum} ${studentUser.name}`;
+
+      sendRecordToGAS({
+        action: 'manualSync',
+        classNum: studentUser.classNum,
+        seatNum: studentUser.seatNum,
+        studentName: studentUser.name,
+        totalAnswered: totalAnswered,
+        totalCorrect: totalCorrect,
+        streak: streak,
+        mistakeWords: mistakes.map(m => `${m.ans}(${m.count})`).join(', ')
+      });
+    });
+
+    // 初始化載入全部隨機 161 題，並主動彈出登入視窗引導學生填寫班級座號
+    buildDeck('ALL');
+    document.getElementById('login-modal')?.classList.remove('hidden');
+  </script>
+</body>
+</html>
